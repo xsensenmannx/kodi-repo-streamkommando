@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.10.2" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.10.3" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -17,6 +17,6 @@
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.10.2: Bibliotheksexport entfernt veraltete Exporte über ein Manifest. 1.10.1: Ordner-Fix.</news>
+        <news>1.10.3: Ohne Bibliotheksordner öffnet der Export direkt die Einstellungen. 1.10.2: Aufräumen.</news>
     </extension>
 </addon>

@@ -608,7 +608,8 @@ class Router(object):
         """Merkliste und Downloads als .strm + .nfo exportieren und die Bibliothek aktualisieren."""
         exporter = LibraryExport()
         if not exporter.folder:
-            kodigui.notify(kodigui.tr(30065), icon=xbmcgui.NOTIFICATION_ERROR)
+            # Ohne Ordner direkt die Einstellungen öffnen, damit er gleich gesetzt werden kann.
+            self.addon.openSettings()
             kodigui.end(self.handle, succeeded=False, cache=False)
             return
         count = exporter.export()
