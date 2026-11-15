@@ -22,6 +22,31 @@ COMMONS_FILE = 'https://commons.wikimedia.org/wiki/Special:FilePath/'
 
 NASA_SIZES = ('~orig.mp4', '~large.mp4', '~medium.mp4', '~small.mp4', '~mobile.mp4', '~preview.mp4')
 
+# Kuratierte Open Movies der Blender Foundation (CC-BY), Fassungen auf Wikimedia Commons.
+BLENDER_FILMS = (
+    ('Big Buck Bunny', 2008,
+     'Ein riesiger Hase rächt sich an drei Nagern – der erste Open Movie der Blender Foundation.',
+     'File:Big Buck Bunny 4K.webm'),
+    ('Sintel', 2010,
+     'Ein Mädchen sucht ihren verletzten Drachen. Fantasy-Kurzfilm der Blender Foundation.',
+     'File:Sintel movie 4K.webm'),
+    ('Tears of Steel', 2012,
+     'Science-Fiction in Amsterdam: Menschen gegen Roboter, gedreht mit realem Filmmaterial.',
+     'File:Tears of Steel 1080p.webm'),
+    ('Cosmos Laundromat', 2015,
+     'Ein Schaf auf einer einsamen Insel trifft einen Händler mit einem ungewöhnlichen Angebot.',
+     'File:Cosmos Laundromat - First Cycle - Official Blender Foundation release.webm'),
+    ('Spring', 2019,
+     'Ein Hirtenmädchen und ihr Hund stellen sich den Geistern des Frühlings.',
+     'File:Spring - Blender Open Movie.webm'),
+    ('Elephants Dream', 2006,
+     'Der erste Open Movie: zwei Männer in einer surrealen Maschinenwelt.',
+     'File:Elephants Dream (2006).webm'),
+    ('Caminandes 3: Llamigos', 2016,
+     'Koro das Lama und sein Freund Pico im Schnee – kurzer Animationsfilm.',
+     'File:Caminandes 3 - Llamigos - Blender Animated Short.webm'),
+)
+
 
 def _open_json(url, timeout=20):
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
@@ -222,6 +247,65 @@ class CommonsProvider(object):
         return src if src.startswith('https://') else ''
 
 
+class BlenderProvider(object):
+    """Kuratierte Blender-Open-Movies-Sammlung, aufgelöst über Wikimedia Commons."""
+
+    key = 'blender'
+    label_id = 30113
+    browse_all = True
+    always_list = False
+
+    def __init__(self):
+        self.cache = Cache('providers')
+
+    def search(self, term, page=1, limit=12, sort=None):
+        term = (term or '').strip().lower()
+        items = []
+        for title, year, plot, commons_title in BLENDER_FILMS:
+            if term and term not in title.lower():
+                continue
+            items.append({
+                'id': commons_title,
+                'title': title,
+                'plot': '%s · Blender Foundation, CC-BY' % plot,
+                'thumb': COMMONS_FILE + urllib.parse.quote(commons_title[len('File:'):]) + '?width=400',
+                'year': year,
+                'url': '',
+            })
+        return items, len(items), False
+
+    def play_url(self, params):
+        src = params.get('src') or ''
+        if src.startswith('https://'):
+            return src
+        return self._resolve(params.get('id') or '')
+
+    def _resolve(self, commons_title):
+        if not commons_title:
+            return ''
+        key = 'blender:' + commons_title
+        url = self.cache.get(key)
+        if url:
+            return url
+        payload = _open_json(COMMONS_API + '?' + urllib.parse.urlencode([
+            ('action', 'query'),
+            ('format', 'json'),
+            ('formatversion', '2'),
+            ('titles', commons_title),
+            ('prop', 'videoinfo'),
+            ('viprop', 'url|derivatives'),
+        ]))
+        pages = (payload.get('query') or {}).get('pages') or []
+        if not pages:
+            return ''
+        info = (pages[0].get('videoinfo') or [{}])[0]
+        url = CommonsProvider._derivative(info)
+        if url.startswith('https://'):
+            self.cache.set(key, url)
+            return url
+        return ''
+
+
 class Providers(object):
     def __init__(self, only_licensed=False):
         self._items = [
@@ -229,12 +313,13 @@ class Providers(object):
             NasaProvider(),
             CommonsProvider(),
         ]
+        self.blender = BlenderProvider()
 
     def all(self):
-        return list(self._items)
+        return list(self._items) + [self.blender]
 
     def by_key(self, key):
-        for provider in self._items:
+        for provider in self.all():
             if provider.key == key:
                 return provider
         return None

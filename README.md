@@ -5,7 +5,7 @@ Repository-Add-on:
 
 | Add-on | Inhalt |
 | --- | --- |
-| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager für alle drei Quellen, eigene `.strm`/`.m3u`-Quellen |
+| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, **Blender Open Movies** (7 CC-BY-Filme), 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager für alle Quellen, eigene `.strm`/`.m3u`-Quellen |
 | Stream Kommando: NASA | **images.nasa.gov**: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
 | Stream Kommando: Commons | **Wikimedia Commons**: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
 
@@ -86,6 +86,7 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 | --- | --- |
 | Sammlungen | Acht Quellen direkt im Hauptmenü (Spielfilme, Sci-Fi & Horror, Komödie, Stummfilm, Animation, Klassisches Fernsehen, Prelinger-Archiv, Kurzfilme), sortiert nach Downloads/Titel/Jahr, mit Blättern |
 | Suche | Globale Suche über Internet Archive, NASA und Wikimedia Commons – Treffer je Quelle gruppiert, Wiedergabe in der besten verfügbaren Qualität |
+| Blender Open Movies | Sieben freie Filme der Blender Foundation (CC-BY) als eigene Sammlung, mit Wiedergabe und Download |
 | Downloads | heruntergeladene Filme abspielen oder löschen |
 | Zufallsfilm | startet direkt einen zufälligen Film |
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |

@@ -72,6 +72,18 @@ msgctxt "#30043"
 msgid "Searches the Internet Archive, NASA and Wikimedia Commons"
 msgstr "Durchsucht Internet Archive, NASA und Wikimedia Commons"
 
+msgctxt "#30044"
+msgid "Blender Open Movies"
+msgstr "Blender Open Movies"
+
+msgctxt "#30045"
+msgid "Free films from the Blender Foundation"
+msgstr "Freie Filme der Blender Foundation"
+
+msgctxt "#30113"
+msgid "Blender Open Movies"
+msgstr "Blender Open Movies"
+
 msgctxt "#30110"
 msgid "Internet Archive"
 msgstr "Internet Archive"

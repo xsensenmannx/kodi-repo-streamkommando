@@ -54,7 +54,7 @@
 
   <p class="lead">
     Ein Repository, drei Add-ons: gemeinfreie Filme aus dem Internet Archive,
-    Videos der NASA und freie Clips von Wikimedia Commons – mit Sammlungen,
+    Videos der NASA, freie Clips von Wikimedia Commons und die Blender Open Movies – mit Sammlungen,
     Suche, Qualitätsauswahl und Download-Manager. Keine fremden Portale,
     keine Bezahlschranken.
   </p>

@@ -91,6 +91,7 @@ class Router(object):
         kodigui.add_link(handle, self.url('random'), kodigui.tr(30005), plot=kodigui.tr(30015))
         for string_id, collection_id in COLLECTIONS:
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
+        kodigui.add_folder(handle, self.url('source', key='blender', page=1), kodigui.tr(30044), plot=kodigui.tr(30045))
         kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
         kodigui.add_folder(handle, self.url('streams'), kodigui.tr(30003))
         kodigui.add_folder(handle, self.settings_url, kodigui.tr(30004), folder=False)
@@ -123,6 +124,8 @@ class Router(object):
         for provider in self.providers.all():
             items, total, _more = provider.search(term, 1, 12, self.sort())
             count = total or len(items)
+            if count == 0 and not getattr(provider, 'always_list', True):
+                continue
             label = '%s · %d' % (kodigui.tr(provider.label_id), count)
             kodigui.add_folder(handle, self.url('source', key=provider.key, q=term, page=1), label)
         kodigui.end(handle, content='files', cache=False)
@@ -131,7 +134,7 @@ class Router(object):
         key = self.params.get('key') or ''
         term = (self.params.get('q') or '').strip()
         provider = self.providers.by_key(key)
-        if provider is None or not term:
+        if provider is None or (not term and not getattr(provider, 'browse_all', False)):
             kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
             kodigui.end(self.handle, succeeded=False, cache=False)
             return
