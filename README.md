@@ -13,7 +13,7 @@ Repository-Add-on:
 
 ```
 repo.json                              Basis-URL des Repositories (vor dem Hosten anpassen)
-build.py                               baut Zips + addons.xml + addons.xml.md5 + index.html
+build.py                               baut Zips + addons.xml + addons.xml.md5, legt die ZIPs in dist/ ab + index.html
 web/index.html.tpl                     Vorlage der Landingpage
 addons.xml / addons.xml.md5            Addon-Index (generiert)
 zips/<addon-id>/<addon-id>-<version>.zip   Installationspakete (generiert)

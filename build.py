@@ -3,14 +3,15 @@
 """Baut das Stream-Kommando-Kodi-Repository.
 
 Packt jeden Addon-Ordner nach zips/<id>/<id>-<version>.zip, ersetzt
-{{BASE_URL}} in der addon.xml des Repository-Addons und schreibt
-addons.xml sowie addons.xml.md5 neu.
+{{BASE_URL}} in der addon.xml des Repository-Addons, schreibt addons.xml
+sowie addons.xml.md5 neu und legt die fertigen Pakete in dist/ ab.
 """
 
 import hashlib
 import html
 import json
 import os
+import shutil
 import xml.etree.ElementTree as ElementTree
 import zipfile
 
@@ -104,6 +105,28 @@ def build_zip(addon_dir, addon, addon_xml, zip_dir):
     return zip_path
 
 
+def sync_dist(built, target_dir):
+    """Kopiert die frisch gebauten ZIPs nach dist/ und entfernt veraltete Pakete."""
+    os.makedirs(target_dir, exist_ok=True)
+    current = {}
+    for data in built.values():
+        source = os.path.join(ROOT, data['zip'])
+        current[os.path.basename(source)] = source
+
+    removed = []
+    for name in sorted(os.listdir(target_dir)):
+        path = os.path.join(target_dir, name)
+        if os.path.isfile(path) and name.lower().endswith('.zip') and name not in current:
+            os.remove(path)
+            removed.append(name)
+
+    copied = []
+    for name, source in sorted(current.items()):
+        shutil.copyfile(source, os.path.join(target_dir, name))
+        copied.append(name)
+    return copied, removed
+
+
 def write_addons_xml(entries, target):
     parts = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', '<addons>']
     for addon_xml in entries:
@@ -192,6 +215,12 @@ def main():
     landing = write_landing_page(config, built, os.path.join(ROOT, 'index.html'))
     if landing:
         print('index.html geschrieben')
+
+    copied, removed = sync_dist(built, os.path.join(ROOT, 'dist'))
+    detail = 'dist/ aktualisiert: %d Pakete' % len(copied)
+    if removed:
+        detail += ' (%d veraltet entfernt: %s)' % (len(removed), ', '.join(removed))
+    print(detail)
 
 
 if __name__ == '__main__':
