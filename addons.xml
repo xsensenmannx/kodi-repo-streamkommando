@@ -21,22 +21,63 @@
         <news>1.2.0: Download-Manager mit Fortschritt und lokaler Filmbibliothek, Sammlungen direkt im Hauptmenü, Kontextmenü "Herunterladen", Löschen aus der Bibliothek.</news>
     </extension>
 </addon>
-<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.1.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando.commons" name="Stream Kommando: Commons" version="1.0.0" provider-name="Stream Kommando">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">Freie Videos von Wikimedia Commons</summary>
+        <summary lang="en_GB">Free videos from Wikimedia Commons</summary>
+        <description lang="de_DE">Stream Kommando: Commons durchsucht die Videodateien von Wikimedia Commons (freie Lizenzen, überwiegend WebM/VP9) und zeigt Lizenz und Autor mit an. Kein API-Schlüssel nötig, keine Drittanbieter-Quellen.</description>
+        <description lang="en_GB">Stream Kommando: Commons searches Wikimedia Commons video files (free licences, mostly WebM/VP9) and shows licence and author. No API key needed, no third-party sources.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+        <news>1.0.0: Erste Version mit Themen und Suche bei Wikimedia Commons.</news>
+    </extension>
+</addon>
+<addon id="plugin.video.streamkommando.nasa" name="Stream Kommando: NASA" version="1.0.0" provider-name="Stream Kommando">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">NASA-Videos: Missionen, Starts, Raumfahrt</summary>
+        <summary lang="en_GB">NASA videos: missions, launches, spaceflight</summary>
+        <description lang="de_DE">Stream Kommando: NASA durchsucht das offizielle NASA-Bild- und Videoarchiv (images.nasa.gov) und spielt Videos direkt ab: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All und Raketenstarts. Kein API-Schlüssel nötig, keine Drittanbieter-Quellen.</description>
+        <description lang="en_GB">Stream Kommando: NASA searches the official NASA image and video library (images.nasa.gov) and plays videos directly: Apollo, Artemis, Mars, ISS, Space Shuttle, Earth from space and rocket launches. No API key needed, no third-party sources.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+        <news>1.0.0: Erste Version mit Themen und Suche im NASA-Archiv.</news>
+    </extension>
+</addon>
+<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.2.0" provider-name="Stream Kommando">
     <extension point="xbmc.addon.repository" name="Stream Kommando Repository">
         <info>https://xsensenmannx.github.io/kodi-repo-streamkommando/addons.xml</info>
         <checksum>https://xsensenmannx.github.io/kodi-repo-streamkommando/addons.xml.md5</checksum>
         <datadir zip="true">https://xsensenmannx.github.io/kodi-repo-streamkommando/zips</datadir>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary lang="de_DE">Kodi-Repository für Stream Kommando</summary>
-        <summary lang="en_GB">Kodi repository for Stream Kommando</summary>
-        <description lang="de_DE">Dieses Repository liefert das Add-on Stream Kommando und dessen Aktualisierungen.</description>
-        <description lang="en_GB">This repository provides the Stream Kommando add-on and its updates.</description>
+        <summary lang="de_DE">Kodi-Repository für die Stream-Kommando-Add-ons</summary>
+        <summary lang="en_GB">Kodi repository for the Stream Kommando add-ons</summary>
+        <description lang="de_DE">Dieses Repository liefert alle Stream-Kommando-Add-ons und deren Aktualisierungen: Internet Archive, NASA und Wikimedia Commons.</description>
+        <description lang="en_GB">This repository provides all Stream Kommando add-ons and their updates: Internet Archive, NASA and Wikimedia Commons.</description>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
+        <news>1.2.0: Katalog mit drei Add-ons (Internet Archive, NASA, Wikimedia Commons).</news>
     </extension>
 </addon>
 </addons>

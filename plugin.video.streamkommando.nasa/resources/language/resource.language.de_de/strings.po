@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.streamkommando.nasa 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-15 22:00+0000\n"
+"PO-Revision-Date: 2026-11-15 22:00+0000\n"
+"Last-Translator: Stream Kommando\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30101"
+msgid "Search the NASA archive"
+msgstr "NASA-Archiv durchsuchen"
+
+msgctxt "#30102"
+msgid "Enter a search term"
+msgstr "Suchbegriff eingeben"
+
+msgctxt "#30103"
+msgid "No videos found"
+msgstr "Keine Videos gefunden"
+
+msgctxt "#30104"
+msgid "Next Page"
+msgstr "Nächste Seite"
+
+msgctxt "#30105"
+msgid "Could not find a playable file"
+msgstr "Keine abspielbare Datei gefunden"

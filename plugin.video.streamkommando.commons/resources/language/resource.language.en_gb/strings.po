@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.streamkommando.commons 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-15 22:00+0000\n"
+"PO-Revision-Date: 2026-11-15 22:00+0000\n"
+"Last-Translator: Stream Kommando\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30201"
+msgid "Search Wikimedia Commons"
+msgstr "Search Wikimedia Commons"
+
+msgctxt "#30202"
+msgid "Enter a search term"
+msgstr "Enter a search term"
+
+msgctxt "#30203"
+msgid "No videos found"
+msgstr "No videos found"
+
+msgctxt "#30204"
+msgid "More videos"
+msgstr "More videos"
+
+msgctxt "#30205"
+msgid "Could not find a playable file"
+msgstr "Could not find a playable file"

@@ -1,24 +1,30 @@
 # Stream Kommando – eigenes Kodi-Repository
 
-Ein selbst gebautes Kodi-Repository mit dem Video-Add-on **Stream Kommando**.
-Das Add-on durchsucht und spielt **gemeinfreie Filme aus dem Internet Archive**
-(kuratierte Sammlungen, Titelsuche, Zufallsfilm) und listet zusätzlich einen
-eigenen Ordner mit `.strm`- und `.m3u`-Dateien.
+Ein selbst gebautes Kodi-Repository mit drei Video-Add-ons unter einem
+Repository-Add-on:
+
+| Add-on | Inhalt |
+| --- | --- |
+| Stream Kommando | **Internet Archive**: gemeinfreie Filme, 8 Sammlungen, Suche, Zufallsfilm, Qualitätsauswahl, Download-Manager, eigene `.strm`/`.m3u`-Quellen |
+| Stream Kommando: NASA | **images.nasa.gov**: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
+| Stream Kommando: Commons | **Wikimedia Commons**: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
 
 ## Aufbau
 
 ```
 repo.json                              Basis-URL des Repositories (vor dem Hosten anpassen)
-build.py                               baut Zips + addons.xml + addons.xml.md5
+build.py                               baut Zips + addons.xml + addons.xml.md5 + index.html
+web/index.html.tpl                     Vorlage der Landingpage
 addons.xml / addons.xml.md5            Addon-Index (generiert)
 zips/<addon-id>/<addon-id>-<version>.zip   Installationspakete (generiert)
 repository.streamkommando/             Repository-Add-on
-plugin.video.streamkommando/           Stream Kommando Add-on
-    default.py
-    resources/lib/                     archive.py, router.py, streams.py, cache.py, kodigui.py
-    resources/settings.xml
-    resources/language/                de_de + en_gb
+plugin.video.streamkommando/           Internet-Archive-Add-on
+plugin.video.streamkommando.nasa/      NASA-Add-on
+plugin.video.streamkommando.commons/   Wikimedia-Commons-Add-on
 ```
+
+Jedes Add-on ist eigenständig (eigene `resources/lib`, eigene Sprachen), damit es
+auch einzeln per ZIP installierbar bleibt.
 
 ## 1. Basis-URL eintragen
 

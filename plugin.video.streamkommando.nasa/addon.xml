@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.streamkommando.nasa" name="Stream Kommando: NASA" version="1.0.0" provider-name="Stream Kommando">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">NASA-Videos: Missionen, Starts, Raumfahrt</summary>
+        <summary lang="en_GB">NASA videos: missions, launches, spaceflight</summary>
+        <description lang="de_DE">Stream Kommando: NASA durchsucht das offizielle NASA-Bild- und Videoarchiv (images.nasa.gov) und spielt Videos direkt ab: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All und Raketenstarts. Kein API-Schlüssel nötig, keine Drittanbieter-Quellen.</description>
+        <description lang="en_GB">Stream Kommando: NASA searches the official NASA image and video library (images.nasa.gov) and plays videos directly: Apollo, Artemis, Mars, ISS, Space Shuttle, Earth from space and rocket launches. No API key needed, no third-party sources.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+        <news>1.0.0: Erste Version mit Themen und Suche im NASA-Archiv.</news>
+    </extension>
+</addon>

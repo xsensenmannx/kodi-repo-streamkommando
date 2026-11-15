@@ -8,6 +8,7 @@ addons.xml sowie addons.xml.md5 neu.
 """
 
 import hashlib
+import html
 import json
 import os
 import xml.etree.ElementTree as ElementTree
@@ -57,6 +58,25 @@ def addon_info(text, source):
     return info
 
 
+def addon_metadata(addon_xml):
+    """Name und deutsche Zusammenfassung für die Landingpage."""
+    root = ElementTree.fromstring(addon_xml)
+    name = root.get('name') or root.get('id') or ''
+    summary = ''
+    for extension in root.findall('extension'):
+        if extension.get('point') != 'xbmc.addon.metadata':
+            continue
+        for child in extension.findall('summary'):
+            if child.get('lang') in ('de_DE', 'de') and (child.text or '').strip():
+                summary = (child.text or '').strip()
+                break
+        if not summary:
+            node = extension.find('summary')
+            if node is not None:
+                summary = (node.text or '').strip()
+    return name, summary
+
+
 def addon_files(addon_dir):
     for current, dirs, files in os.walk(addon_dir):
         dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not d.startswith('.'))
@@ -95,6 +115,27 @@ def write_addons_xml(entries, target):
     return content.encode('utf-8')
 
 
+def render_addon_cards(built):
+    cards = []
+    for addon_id in sorted(built):
+        if addon_id.startswith('repository.'):
+            continue
+        data = built[addon_id]
+        cards.append(
+            '    <a class="card addon" href="%s">\n'
+            '      <h3>%s</h3>\n'
+            '      <p>%s</p>\n'
+            '      <span class="ver">v%s</span>\n'
+            '    </a>' % (
+                html.escape(data.get('zip', '')),
+                html.escape(data.get('name', addon_id)),
+                html.escape(data.get('summary', '')),
+                html.escape(data.get('version', '')),
+            )
+        )
+    return '\n'.join(cards)
+
+
 def write_landing_page(config, built, target):
     """Rendert web/index.html.tpl mit Versionen, Zip-Pfaden und Basis-URL."""
     template = os.path.join(ROOT, 'web', 'index.html.tpl')
@@ -110,6 +151,7 @@ def write_landing_page(config, built, target):
         '{{REPO_ZIP}}': repo_addon.get('zip', ''),
         '{{ADDON_VERSION}}': video_addon.get('version', ''),
         '{{ADDON_ZIP}}': video_addon.get('zip', ''),
+        '{{ADDON_LIST}}': render_addon_cards(built),
     }
     for token, value in tokens.items():
         html = html.replace(token, value)
@@ -133,8 +175,11 @@ def main():
         info = addon_info(addon_xml, addon_dir)
         zip_path = build_zip(addon_dir, info, addon_xml, zip_dir)
         entries.append(addon_xml)
+        name, summary = addon_metadata(addon_xml)
         built[info['id']] = {
             'version': info['version'],
+            'name': name,
+            'summary': summary,
             'zip': os.path.relpath(zip_path, ROOT).replace(os.sep, '/'),
         }
         print('  %-32s %-8s %s' % (info['id'], info['version'], os.path.relpath(zip_path, ROOT)))

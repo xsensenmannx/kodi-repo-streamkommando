@@ -35,6 +35,9 @@
   .card { background: rgba(13,33,50,.7); border: 1px solid rgba(90,150,190,.22); border-radius: 12px; padding: 16px 18px; }
   .card h3 { margin: 0 0 6px; font-size: 15px; color: #d7efff; }
   .card p { margin: 0; font-size: 14px; color: #9db8ca; line-height: 1.5; }
+  .card.addon { display: block; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+  .card.addon:hover { border-color: rgba(120,210,255,.55); transform: translateY(-2px); }
+  .ver { display: inline-block; margin-top: 10px; font-size: 12px; letter-spacing: 1px; color: #7fd4f5; }
   footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(90,150,190,.2); color: #7d97a9; font-size: 13px; }
   footer a { color: #8fd6f5; }
 </style>
@@ -50,14 +53,20 @@
   </header>
 
   <p class="lead">
-    Eigenes Kodi-Repository für gemeinfreie Filme aus dem Internet Archive:
-    kuratierte Sammlungen, Titelsuche, Zufallsfilm, Qualitätsauswahl und eigene
-    <code>.strm</code>-/.m3u</code>-Quellen. Keine fremden Portale, keine Bezahlschranken.
+    Ein Repository, drei Add-ons: gemeinfreie Filme aus dem Internet Archive,
+    Videos der NASA und freie Clips von Wikimedia Commons – mit Sammlungen,
+    Suche, Qualitätsauswahl und Download-Manager. Keine fremden Portale,
+    keine Bezahlschranken.
   </p>
 
   <div class="buttons">
     <a class="btn" href="{{REPO_ZIP}}">Repository installieren ({{REPO_VERSION}})</a>
     <a class="btn secondary" href="{{ADDON_ZIP}}">Add-on direkt als ZIP</a>
+  </div>
+
+  <h2>Add-ons im Repository</h2>
+  <div class="grid addons">
+{{ADDON_LIST}}
   </div>
 
   <h2>Installation in Kodi</h2>

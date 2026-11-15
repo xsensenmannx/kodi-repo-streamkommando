@@ -35,6 +35,9 @@
   .card { background: rgba(13,33,50,.7); border: 1px solid rgba(90,150,190,.22); border-radius: 12px; padding: 16px 18px; }
   .card h3 { margin: 0 0 6px; font-size: 15px; color: #d7efff; }
   .card p { margin: 0; font-size: 14px; color: #9db8ca; line-height: 1.5; }
+  .card.addon { display: block; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+  .card.addon:hover { border-color: rgba(120,210,255,.55); transform: translateY(-2px); }
+  .ver { display: inline-block; margin-top: 10px; font-size: 12px; letter-spacing: 1px; color: #7fd4f5; }
   footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(90,150,190,.2); color: #7d97a9; font-size: 13px; }
   footer a { color: #8fd6f5; }
 </style>
@@ -50,14 +53,34 @@
   </header>
 
   <p class="lead">
-    Eigenes Kodi-Repository für gemeinfreie Filme aus dem Internet Archive:
-    kuratierte Sammlungen, Titelsuche, Zufallsfilm, Qualitätsauswahl und eigene
-    <code>.strm</code>-/.m3u</code>-Quellen. Keine fremden Portale, keine Bezahlschranken.
+    Ein Repository, drei Add-ons: gemeinfreie Filme aus dem Internet Archive,
+    Videos der NASA und freie Clips von Wikimedia Commons – mit Sammlungen,
+    Suche, Qualitätsauswahl und Download-Manager. Keine fremden Portale,
+    keine Bezahlschranken.
   </p>
 
   <div class="buttons">
-    <a class="btn" href="zips/repository.streamkommando/repository.streamkommando-1.1.0.zip">Repository installieren (1.1.0)</a>
+    <a class="btn" href="zips/repository.streamkommando/repository.streamkommando-1.2.0.zip">Repository installieren (1.2.0)</a>
     <a class="btn secondary" href="zips/plugin.video.streamkommando/plugin.video.streamkommando-1.2.0.zip">Add-on direkt als ZIP</a>
+  </div>
+
+  <h2>Add-ons im Repository</h2>
+  <div class="grid addons">
+    <a class="card addon" href="zips/plugin.video.streamkommando/plugin.video.streamkommando-1.2.0.zip">
+      <h3>Stream Kommando</h3>
+      <p>Gemeinfreie Filme aus dem Internet Archive</p>
+      <span class="ver">v1.2.0</span>
+    </a>
+    <a class="card addon" href="zips/plugin.video.streamkommando.commons/plugin.video.streamkommando.commons-1.0.0.zip">
+      <h3>Stream Kommando: Commons</h3>
+      <p>Freie Videos von Wikimedia Commons</p>
+      <span class="ver">v1.0.0</span>
+    </a>
+    <a class="card addon" href="zips/plugin.video.streamkommando.nasa/plugin.video.streamkommando.nasa-1.0.0.zip">
+      <h3>Stream Kommando: NASA</h3>
+      <p>NASA-Videos: Missionen, Starts, Raumfahrt</p>
+      <span class="ver">v1.0.0</span>
+    </a>
   </div>
 
   <h2>Installation in Kodi</h2>
@@ -65,7 +88,7 @@
     <li>Diese Seite als Quelle hinzufügen: <strong>Einstellungen → Dateimanager → Quelle hinzufügen</strong>, URL
       <code>https://xsensenmannx.github.io/kodi-repo-streamkommando</code>.</li>
     <li><strong>Add-ons → Aus ZIP-Datei installieren</strong> → Quelle öffnen →
-      <code>zips/repository.streamkommando/repository.streamkommando-1.1.0.zip</code>.</li>
+      <code>zips/repository.streamkommando/repository.streamkommando-1.2.0.zip</code>.</li>
     <li><strong>Aus Repository installieren → Stream Kommando Repository → Video-Add-ons → Stream Kommando</strong>.</li>
   </ol>
 
