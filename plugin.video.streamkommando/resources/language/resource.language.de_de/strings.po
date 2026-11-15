@@ -72,6 +72,30 @@ msgctxt "#30043"
 msgid "Searches the Internet Archive, NASA and Wikimedia Commons"
 msgstr "Durchsucht Internet Archive, NASA und Wikimedia Commons"
 
+msgctxt "#30048"
+msgid "Add to watchlist"
+msgstr "Zur Merkliste hinzufügen"
+
+msgctxt "#30049"
+msgid "Remove from watchlist"
+msgstr "Von der Merkliste entfernen"
+
+msgctxt "#30050"
+msgid "My watchlist"
+msgstr "Meine Merkliste"
+
+msgctxt "#30051"
+msgid "Locally saved films and videos"
+msgstr "Lokal gespeicherte Filme und Videos"
+
+msgctxt "#30052"
+msgid "Added to watchlist"
+msgstr "Zur Merkliste hinzugefügt"
+
+msgctxt "#30053"
+msgid "Removed from watchlist"
+msgstr "Von der Merkliste entfernt"
+
 msgctxt "#30046"
 msgid "Source not reachable"
 msgstr "Quelle nicht erreichbar"

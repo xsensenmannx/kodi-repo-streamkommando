@@ -25,6 +25,7 @@ from .cache import Cache
 from .downloads import VIDEO_SUFFIXES, Downloads
 from .providers import Providers
 from .streams import Streams
+from .watchlist import Watchlist
 
 SOURCE_LIMIT = 24
 
@@ -92,6 +93,7 @@ class Router(object):
         for string_id, collection_id in COLLECTIONS:
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
         kodigui.add_folder(handle, self.url('source', key='blender', page=1), kodigui.tr(30044), plot=kodigui.tr(30045))
+        kodigui.add_folder(handle, self.url('watchlist'), kodigui.tr(30050), plot=kodigui.tr(30051))
         kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
         kodigui.add_folder(handle, self.url('streams'), kodigui.tr(30003))
         kodigui.add_folder(handle, self.settings_url, kodigui.tr(30004), folder=False)
@@ -140,19 +142,37 @@ class Router(object):
             return
         items, total, more = provider.search(term, self.page(), SOURCE_LIMIT, self.sort())
         handle = self.handle
+        saved_keys = Watchlist().keys()
         for item in items:
-            context = [(
-                kodigui.tr(30033),
-                'RunPlugin(%s)' % self.url(
-                    'sourcedownload',
-                    key=key,
-                    id=item.get('id') or '',
-                    src=item.get('url') or '',
-                    title=item.get('title') or '',
-                    year=item.get('year') or 0,
-                    plot=item.get('plot') or '',
+            identifier = item.get('id') or ''
+            saved = Watchlist.key(key, identifier) in saved_keys
+            context = [
+                (
+                    kodigui.tr(30033),
+                    'RunPlugin(%s)' % self.url(
+                        'sourcedownload',
+                        key=key,
+                        id=identifier,
+                        src=item.get('url') or '',
+                        title=item.get('title') or '',
+                        year=item.get('year') or 0,
+                        plot=item.get('plot') or '',
+                    ),
                 ),
-            )]
+                (
+                    kodigui.tr(30049 if saved else 30048),
+                    'RunPlugin(%s)' % self.url(
+                        'watchlisttoggle',
+                        provider=key,
+                        id=identifier,
+                        src=item.get('url') or '',
+                        title=item.get('title') or '',
+                        year=item.get('year') or 0,
+                        plot=item.get('plot') or '',
+                        thumb=item.get('thumb') or '',
+                    ),
+                ),
+            ]
             kodigui.add_link(
                 handle,
                 self.url(
@@ -218,6 +238,76 @@ class Router(object):
         icon = xbmcgui.NOTIFICATION_INFO if ok else xbmcgui.NOTIFICATION_ERROR
         kodigui.notify(kodigui.tr(message_id), icon=icon)
 
+    # -- Merkliste --------------------------------------------------
+    def view_watchlist(self):
+        handle = self.handle
+        entries = Watchlist().entries()
+        if not entries:
+            kodigui.notify(kodigui.tr(30007))
+        for entry in entries:
+            context = [(
+                kodigui.tr(30049),
+                'RunPlugin(%s)' % self.url(
+                    'watchlistremove',
+                    provider=entry.get('provider') or '',
+                    id=entry.get('id') or '',
+                ),
+            )]
+            kodigui.add_link(
+                handle,
+                self.url(
+                    'watchlistplay',
+                    provider=entry.get('provider') or '',
+                    id=entry.get('id') or '',
+                    src=entry.get('src') or '',
+                    title=entry.get('title') or '',
+                    plot=entry.get('plot') or '',
+                    thumb=entry.get('thumb') or '',
+                ),
+                entry.get('title') or entry.get('id'),
+                entry.get('thumb'),
+                context=context,
+                title=entry.get('title') or entry.get('id'),
+                year=entry.get('year') or 0,
+                plot=entry.get('plot') or '',
+                mediatype='movie',
+            )
+        kodigui.end(handle, content='videos', cache=False)
+
+    def view_watchlistplay(self):
+        provider = self.params.get('provider') or ''
+        if provider in ('', 'archive'):
+            self.view_play()
+            return
+        self.params['key'] = provider
+        self.view_sourceplay()
+
+    def view_watchlisttoggle(self):
+        try:
+            year = int(self.params.get('year') or 0)
+        except (TypeError, ValueError):
+            year = 0
+        entry = {
+            'provider': self.params.get('provider') or '',
+            'id': self.params.get('id') or '',
+            'src': self.params.get('src') or '',
+            'title': clean_text(self.params.get('title'), 200),
+            'plot': clean_text(self.params.get('plot'), 600),
+            'thumb': self.params.get('thumb') or '',
+            'year': year,
+        }
+        if not entry['id']:
+            return
+        added = Watchlist().toggle(entry)
+        kodigui.notify(kodigui.tr(30052 if added else 30053))
+        xbmc.executebuiltin('Container.Refresh')
+
+    def view_watchlistremove(self):
+        removed = Watchlist().remove(self.params.get('provider') or '', self.params.get('id') or '')
+        if removed:
+            kodigui.notify(kodigui.tr(30053))
+        xbmc.executebuiltin('Container.Refresh')
+
     def view_sourceplay(self):
         key = self.params.get('key') or ''
         provider = self.providers.by_key(key)
@@ -244,15 +334,31 @@ class Router(object):
     # -- Filmarchiv -------------------------------------------------
     def list_movies(self, docs, total, mode, **params):
         handle = self.handle
+        saved_ids = {row.get('id') for row in Watchlist().entries() if row.get('provider') == 'archive'}
         for doc in docs:
             identifier = doc.get('identifier')
             if not identifier:
                 continue
             title = clean_text(doc.get('title'), 200) or identifier
-            context = [(
-                kodigui.tr(30033),
-                'RunPlugin(%s)' % self.url('download', id=identifier),
-            )]
+            context = [
+                (
+                    kodigui.tr(30033),
+                    'RunPlugin(%s)' % self.url('download', id=identifier),
+                ),
+                (
+                    kodigui.tr(30049 if identifier in saved_ids else 30048),
+                    'RunPlugin(%s)' % self.url(
+                        'watchlisttoggle',
+                        provider='archive',
+                        id=identifier,
+                        src='',
+                        title=title,
+                        plot=clean_text(doc.get('description'), 600),
+                        thumb=IMG_URL + urllib.parse.quote(identifier),
+                        year=to_year(doc.get('year')),
+                    ),
+                ),
+            ]
             kodigui.add_link(
                 handle,
                 self.url('play', id=identifier),
