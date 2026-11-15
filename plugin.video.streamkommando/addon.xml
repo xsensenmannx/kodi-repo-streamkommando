@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.5.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.6.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -17,6 +17,6 @@
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.5.0: Blender Open Movies als eigene Sammlung (CC-BY) mit Wiedergabe und Download. 1.4.0: Downloads für NASA und Commons.</news>
+        <news>1.6.0: Fehlerbehandlung – unerwartete Fehler mit Log und Dialog, nicht erreichbare Quellen klar gemeldet. 1.5.0: Blender Open Movies.</news>
     </extension>
 </addon>

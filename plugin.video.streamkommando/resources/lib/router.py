@@ -173,7 +173,10 @@ class Router(object):
                 mediatype='movie',
             )
         if not items:
-            kodigui.notify(kodigui.tr(30007))
+            if getattr(provider, 'error', False):
+                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
+            else:
+                kodigui.notify(kodigui.tr(30007))
         if more or total > self.page() * SOURCE_LIMIT:
             kodigui.add_folder(
                 handle,

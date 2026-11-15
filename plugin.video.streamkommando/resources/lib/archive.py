@@ -144,13 +144,14 @@ def _open_json(url, timeout=20):
             return json.loads(response.read().decode('utf-8', 'replace'))
     except (OSError, ValueError) as error:
         xbmc.log('Stream Kommando: Anfrage fehlgeschlagen (%s): %s' % (url, error), xbmc.LOGWARNING)
-        return {}
+        return None
 
 
 class Archive(object):
     def __init__(self, cache=None, only_licensed=False):
         self.cache = cache if cache is not None else Cache()
         self.only_licensed = bool(only_licensed)
+        self.error = False
         self.license_clause = ' AND licenseurl:*' if self.only_licensed else ''
 
     # -- Suche ------------------------------------------------------
@@ -158,9 +159,14 @@ class Archive(object):
         params = [('q', query), ('rows', rows), ('page', page), ('output', 'json'), ('sort[]', sort)]
         params.extend(('fl[]', field) for field in FIELDS)
         url = SEARCH_URL + '?' + urllib.parse.urlencode(params)
+        self.error = False
         data = self.cache.get(url)
         if data is None:
-            data = _open_json(url).get('response') or {}
+            payload = _open_json(url)
+            if payload is None:
+                self.error = True
+                return [], 0
+            data = payload.get('response') or {}
             if data:
                 self.cache.set(url, data)
         return data.get('docs') or [], int(data.get('numFound') or 0)
@@ -201,6 +207,9 @@ class Archive(object):
         data = self.cache.get(key)
         if data is None:
             payload = _open_json(META_URL + urllib.parse.quote(identifier))
+            if payload is None:
+                self.error = True
+                return None
             if not payload:
                 return None
             data = self._digest(identifier, payload)

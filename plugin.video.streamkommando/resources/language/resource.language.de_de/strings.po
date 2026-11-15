@@ -72,6 +72,14 @@ msgctxt "#30043"
 msgid "Searches the Internet Archive, NASA and Wikimedia Commons"
 msgstr "Durchsucht Internet Archive, NASA und Wikimedia Commons"
 
+msgctxt "#30046"
+msgid "Source not reachable"
+msgstr "Quelle nicht erreichbar"
+
+msgctxt "#30047"
+msgid "Unexpected error – details in the log"
+msgstr "Unerwarteter Fehler – Details im Log"
+
 msgctxt "#30044"
 msgid "Blender Open Movies"
 msgstr "Blender Open Movies"

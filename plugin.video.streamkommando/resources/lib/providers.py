@@ -55,7 +55,7 @@ def _open_json(url, timeout=20):
             return json.loads(response.read().decode('utf-8', 'replace'))
     except (OSError, ValueError) as error:
         xbmc.log('Stream Kommando: Provider-Anfrage fehlgeschlagen (%s): %s' % (url, error), xbmc.LOGWARNING)
-        return {}
+        return None
 
 
 def _secure(url):
@@ -75,9 +75,11 @@ class ArchiveProvider(object):
 
     def __init__(self, only_licensed=False):
         self.api = Archive(Cache('providers'), only_licensed=only_licensed)
+        self.error = False
 
     def search(self, term, page=1, limit=12, sort=None):
         docs, total = self.api.find(term, page, limit, sort or 'downloads desc')
+        self.error = self.api.error
         items = []
         for doc in docs:
             identifier = doc.get('identifier')
@@ -104,8 +106,10 @@ class NasaProvider(object):
 
     def __init__(self):
         self.cache = Cache('providers')
+        self.error = False
 
     def search(self, term, page=1, limit=12, sort=None):
+        self.error = False
         params = {
             'q': term,
             'media_type': 'video',
@@ -115,7 +119,11 @@ class NasaProvider(object):
         url = NASA_BASE + '/search?' + urllib.parse.urlencode(params)
         data = self.cache.get(url)
         if data is None:
-            collection = (_open_json(url).get('collection') or {})
+            payload = _open_json(url)
+            if payload is None:
+                self.error = True
+                return [], 0, False
+            collection = (payload.get('collection') or {})
             total = int((collection.get('metadata') or {}).get('total_hits') or 0)
             items = []
             for entry in collection.get('items') or []:
@@ -150,6 +158,9 @@ class NasaProvider(object):
         url = self.cache.get(key)
         if url is None:
             payload = _open_json(NASA_BASE + '/asset/' + urllib.parse.quote(identifier))
+            if not payload:
+                self.error = True
+                return ''
             files = [entry.get('href') or '' for entry in (payload.get('collection') or {}).get('items') or []]
             mp4 = [path for path in files if path.lower().endswith('.mp4')]
             url = ''
@@ -174,8 +185,10 @@ class CommonsProvider(object):
 
     def __init__(self):
         self.cache = Cache('providers')
+        self.error = False
 
     def search(self, term, page=1, limit=12, sort=None):
+        self.error = False
         offset = max(0, (max(1, int(page)) - 1) * limit)
         params = [
             ('action', 'query'),
@@ -193,6 +206,9 @@ class CommonsProvider(object):
         data = self.cache.get(url)
         if data is None:
             payload = _open_json(url)
+            if payload is None:
+                self.error = True
+                return [], 0, False
             items = []
             for entry in (payload.get('query') or {}).get('pages') or []:
                 info = (entry.get('videoinfo') or [{}])[0]
@@ -257,8 +273,10 @@ class BlenderProvider(object):
 
     def __init__(self):
         self.cache = Cache('providers')
+        self.error = False
 
     def search(self, term, page=1, limit=12, sort=None):
+        self.error = False
         term = (term or '').strip().lower()
         items = []
         for title, year, plot, commons_title in BLENDER_FILMS:
@@ -295,6 +313,9 @@ class BlenderProvider(object):
             ('prop', 'videoinfo'),
             ('viprop', 'url|derivatives'),
         ]))
+        if not payload:
+            self.error = True
+            return ''
         pages = (payload.get('query') or {}).get('pages') or []
         if not pages:
             return ''
