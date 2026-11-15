@@ -100,6 +100,26 @@ msgctxt "#30060"
 msgid "Removed from history"
 msgstr "Removed from history"
 
+msgctxt "#30068"
+msgid "Custom collections"
+msgstr "Custom collections"
+
+msgctxt "#30069"
+msgid "Internet Archive collections (IDs, comma separated)"
+msgstr "Internet Archive collections (IDs, comma separated)"
+
+msgctxt "#30070"
+msgid "Wikimedia Commons categories (comma separated)"
+msgstr "Wikimedia Commons categories (comma separated)"
+
+msgctxt "#30071"
+msgid "No custom collections configured"
+msgstr "No custom collections configured"
+
+msgctxt "#30072"
+msgid "Browse your own Internet Archive collections and Commons categories"
+msgstr "Browse your own Internet Archive collections and Commons categories"
+
 msgctxt "#30061"
 msgid "Library"
 msgstr "Library"

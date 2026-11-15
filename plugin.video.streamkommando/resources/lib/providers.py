@@ -14,6 +14,7 @@ import xbmc
 
 from . import subtitles
 from .archive import IMG_URL, Archive, clean_text, to_year
+from .feeds import normalize_commons
 from .cache import Cache
 
 USER_AGENT = 'StreamKommando/1.3 (Kodi Add-on; +https://github.com/xsensenmannx/kodi-repo-streamkommando)'
@@ -216,30 +217,9 @@ class CommonsProvider(object):
                 return [], 0, False
             items = []
             for entry in (payload.get('query') or {}).get('pages') or []:
-                info = (entry.get('videoinfo') or [{}])[0]
-                src = self._derivative(info)
-                if not src:
-                    continue
-                title = str(entry.get('title') or '').replace('File:', '')
-                title = re.sub(r'\.[a-z0-9]{2,5}$', '', title, flags=re.I).replace('_', ' ')
-                meta = info.get('extmetadata') or {}
-                license_name = clean_text((meta.get('LicenseShortName') or {}).get('value'), 60)
-                artist = clean_text((meta.get('Artist') or {}).get('value'), 120)
-                plot = ['Wikimedia Commons']
-                if license_name:
-                    plot.append('Lizenz: %s' % license_name)
-                if artist:
-                    plot.append('Autor: %s' % artist)
-                raw_title = str(entry.get('title') or '')
-                file_name = raw_title[len('File:'):] if raw_title.startswith('File:') else raw_title
-                items.append({
-                    'id': raw_title,
-                    'title': title or raw_title,
-                    'plot': ' · '.join(plot),
-                    'thumb': COMMONS_FILE + urllib.parse.quote(file_name) + '?width=400',
-                    'year': 0,
-                    'url': src,
-                })
+                item = self._item_from_page(entry)
+                if item:
+                    items.append(item)
             data = {'items': items, 'more': bool(payload.get('continue'))}
             if items:
                 self.cache.set(url, data)
@@ -247,6 +227,68 @@ class CommonsProvider(object):
         more = bool(data.get('more'))
         total = ((offset + len(items) + limit) if more else offset + len(items))
         return items, total, more
+
+    def category(self, name, limit=50):
+        """Videos aus einer Commons-Kategorie (bis 50 Einträge)."""
+        self.error = False
+        name = normalize_commons(name)
+        if not name:
+            return [], False
+        params = [
+            ('action', 'query'),
+            ('format', 'json'),
+            ('formatversion', '2'),
+            ('generator', 'categorymembers'),
+            ('gcmtitle', 'Category:' + name),
+            ('gcmtype', 'file'),
+            ('gcmlimit', min(50, max(1, int(limit)))),
+            ('gcmsort', 'sortkey'),
+            ('prop', 'videoinfo'),
+            ('viprop', 'url|size|derivatives|extmetadata'),
+        ]
+        url = COMMONS_API + '?' + urllib.parse.urlencode(params)
+        data = self.cache.get(url)
+        if data is None:
+            payload = _open_json(url)
+            if payload is None:
+                self.error = True
+                return [], False
+            items = []
+            for entry in (payload.get('query') or {}).get('pages') or []:
+                item = self._item_from_page(entry)
+                if item:
+                    items.append(item)
+            data = {'items': items}
+            if items:
+                self.cache.set(url, data)
+        return data.get('items') or [], False
+
+    @staticmethod
+    def _item_from_page(entry):
+        info = (entry.get('videoinfo') or [{}])[0]
+        src = CommonsProvider._derivative(info)
+        if not src:
+            return None
+        title = str(entry.get('title') or '').replace('File:', '')
+        title = re.sub(r'\.[a-z0-9]{2,5}$', '', title, flags=re.I).replace('_', ' ')
+        meta = info.get('extmetadata') or {}
+        license_name = clean_text((meta.get('LicenseShortName') or {}).get('value'), 60)
+        artist = clean_text((meta.get('Artist') or {}).get('value'), 120)
+        plot = ['Wikimedia Commons']
+        if license_name:
+            plot.append('Lizenz: %s' % license_name)
+        if artist:
+            plot.append('Autor: %s' % artist)
+        raw_title = str(entry.get('title') or '')
+        file_name = raw_title[len('File:'):] if raw_title.startswith('File:') else raw_title
+        return {
+            'id': raw_title,
+            'title': title or raw_title,
+            'plot': ' · '.join(plot),
+            'thumb': COMMONS_FILE + urllib.parse.quote(file_name) + '?width=400',
+            'year': 0,
+            'url': src,
+        }
 
     @staticmethod
     def _derivative(info):

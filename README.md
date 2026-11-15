@@ -91,6 +91,7 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 | Verlauf | Zuletzt gesehen mit Wiedergabeposition, Fortsetzen-Dialog und Entfernen per Kontextmenü |
 | Untertitel | SRT aus dem Internet Archive und TimedText (VTT) von Commons als Kodi-Untertitelspuren |
 | Bibliothek | Merkliste und Downloads als `.strm` + `.nfo` exportieren, veraltete Exporte über ein Manifest aufräumen und die Kodi-Filmbibliothek aktualisieren |
+| Eigene Sammlungen | Internet-Archive-Collection-IDs und Wikimedia-Commons-Kategorien in den Einstellungen eintragen; erscheinen als eigene Menüpunkte |
 | Downloads | heruntergeladene Filme abspielen oder löschen |
 | Zufallsfilm | startet direkt einen zufälligen Film |
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |

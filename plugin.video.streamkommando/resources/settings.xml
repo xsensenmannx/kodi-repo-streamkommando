@@ -64,6 +64,18 @@
                 </setting>
             </group>
         </category>
+        <category id="feeds" label="30068">
+            <group id="1">
+                <setting id="custom_ia_collections" type="text" label="30069" default="">
+                    <level>0</level>
+                    <control type="edit" format="string"/>
+                </setting>
+                <setting id="custom_commons_categories" type="text" label="30070" default="">
+                    <level>0</level>
+                    <control type="edit" format="string"/>
+                </setting>
+            </group>
+        </category>
         <category id="streams" label="30003">
             <group id="1">
                 <setting id="own_streams_path" type="path" label="30022" default="">

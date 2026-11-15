@@ -24,6 +24,7 @@ from .archive import (
 )
 from .cache import Cache
 from .downloads import VIDEO_SUFFIXES, Downloads
+from .feeds import Feeds, normalize_commons, normalize_ia
 from .history import History, format_position
 from .library import LibraryExport
 from .providers import Providers
@@ -96,6 +97,7 @@ class Router(object):
         for string_id, collection_id in COLLECTIONS:
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
         kodigui.add_folder(handle, self.url('source', key='blender', page=1), kodigui.tr(30044), plot=kodigui.tr(30045))
+        kodigui.add_folder(handle, self.url('feeds'), kodigui.tr(30068), plot=kodigui.tr(30072))
         kodigui.add_folder(handle, self.url('watchlist'), kodigui.tr(30050), plot=kodigui.tr(30051))
         kodigui.add_folder(handle, self.url('history'), kodigui.tr(30054), plot=kodigui.tr(30058))
         kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
@@ -119,6 +121,61 @@ class Router(object):
         collection_id = self.params.get('id') or ''
         docs, total = self.archive.collection(collection_id, self.page(), self.rows(), self.sort())
         self.list_movies(docs, total, 'collection', id=collection_id)
+
+    # -- Eigene Sammlungen -----------------------------------------
+    def view_feeds(self):
+        handle = self.handle
+        feeds = Feeds()
+        entries = feeds.entries()
+        if not entries:
+            kodigui.notify(kodigui.tr(30071))
+            self.addon.openSettings()
+            kodigui.end(handle, succeeded=False, cache=False)
+            return
+        for entry in entries:
+            kodigui.add_folder(
+                handle,
+                self.url('feed', kind=entry['kind'], id=entry['id']),
+                entry['label'],
+                plot=kodigui.tr(30072),
+            )
+        kodigui.end(handle, content='files', cache=False)
+
+    def view_feed(self):
+        kind = self.params.get('kind') or ''
+        identifier = self.params.get('id') or ''
+        if kind == 'ia':
+            identifier = normalize_ia(identifier)
+            if not identifier:
+                kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
+                kodigui.end(self.handle, succeeded=False, cache=False)
+                return
+            docs, total = self.archive.collection(identifier, self.page(), self.rows(), self.sort())
+            if self.archive.error and not docs:
+                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
+                kodigui.end(self.handle, succeeded=False, cache=False)
+                return
+            self.list_movies(docs, total, 'feed', kind='ia', id=identifier)
+            return
+        if kind == 'commons':
+            name = normalize_commons(identifier)
+            provider = self.providers.by_key('commons')
+            if not name or provider is None:
+                kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
+                kodigui.end(self.handle, succeeded=False, cache=False)
+                return
+            items, _more = provider.category(name, 50)
+            if provider.error and not items:
+                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
+                kodigui.end(self.handle, succeeded=False, cache=False)
+                return
+            self.add_source_items(items, 'commons')
+            if not items:
+                kodigui.notify(kodigui.tr(30007))
+            kodigui.end(self.handle, content='videos')
+            return
+        kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
+        kodigui.end(self.handle, succeeded=False, cache=False)
 
     # -- Globale Suche ---------------------------------------------
     def view_search(self):
@@ -148,6 +205,22 @@ class Router(object):
             return
         items, total, more = provider.search(term, self.page(), SOURCE_LIMIT, self.sort())
         handle = self.handle
+        self.add_source_items(items, key)
+        if not items:
+            if getattr(provider, 'error', False):
+                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
+            else:
+                kodigui.notify(kodigui.tr(30007))
+        if more or total > self.page() * SOURCE_LIMIT:
+            kodigui.add_folder(
+                handle,
+                self.url('source', key=key, q=term, page=self.page() + 1),
+                kodigui.tr(30006),
+            )
+        kodigui.end(handle, content='videos')
+
+    def add_source_items(self, items, key):
+        """NASA-/Commons-Treffer mit Download- und Merklisten-Kontext anhängen."""
         saved_keys = Watchlist().keys()
         for item in items:
             identifier = item.get('id') or ''
@@ -180,7 +253,7 @@ class Router(object):
                 ),
             ]
             kodigui.add_link(
-                handle,
+                self.handle,
                 self.url(
                     'sourceplay',
                     key=key,
@@ -198,18 +271,6 @@ class Router(object):
                 plot=item.get('plot') or '',
                 mediatype='movie',
             )
-        if not items:
-            if getattr(provider, 'error', False):
-                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
-            else:
-                kodigui.notify(kodigui.tr(30007))
-        if more or total > self.page() * SOURCE_LIMIT:
-            kodigui.add_folder(
-                handle,
-                self.url('source', key=key, q=term, page=self.page() + 1),
-                kodigui.tr(30006),
-            )
-        kodigui.end(handle, content='videos')
 
     def view_sourcedownload(self):
         """Kontextmenü-Aktion: NASA- oder Commons-Treffer herunterladen."""

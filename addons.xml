@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.10.3" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.11.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -10,15 +10,15 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="de_DE">Gemeinfreie Filme aus dem Internet Archive</summary>
         <summary lang="en_GB">Public domain films from the Internet Archive</summary>
-        <description lang="de_DE">Stream Kommando durchsucht und spielt freie Filme und Videos: globale Suche über Internet Archive, NASA und Wikimedia Commons, kuratierte Blender Open Movies, Sammlungen direkt im Hauptmenü, Zufallsfilm, Qualitätsauswahl, Download-Manager mit lokaler Filmbibliothek, Merkliste, Verlauf mit Wiedergabeposition, Untertitelspuren aus den Quellen, Export als .strm/.nfo für die Kodi-Bibliothek und ein eigener Ordner mit .strm- und .m3u-Dateien.</description>
-        <description lang="en_GB">Stream Kommando browses and plays free films and videos: global search across the Internet Archive, NASA and Wikimedia Commons, curated Blender Open Movies, collections in the main menu, a random movie, quality selection, a download manager with a local library, a watchlist, resume history, subtitle tracks from the sources, .strm/.nfo export for the Kodi library and your own folder of .strm and .m3u files.</description>
+        <description lang="de_DE">Stream Kommando durchsucht und spielt freie Filme und Videos: globale Suche über Internet Archive, NASA und Wikimedia Commons, kuratierte Blender Open Movies, Sammlungen direkt im Hauptmenü, Zufallsfilm, Qualitätsauswahl, Download-Manager mit lokaler Filmbibliothek, Merkliste, Verlauf mit Wiedergabeposition, Untertitelspuren aus den Quellen, Export als .strm/.nfo für die Kodi-Bibliothek, eigene Sammlungen aus Archive-Collections und Commons-Kategorien und ein eigener Ordner mit .strm- und .m3u-Dateien.</description>
+        <description lang="en_GB">Stream Kommando browses and plays free films and videos: global search across the Internet Archive, NASA and Wikimedia Commons, curated Blender Open Movies, collections in the main menu, a random movie, quality selection, a download manager with a local library, a watchlist, resume history, subtitle tracks from the sources, .strm/.nfo export for the Kodi library, custom collections from Archive collections and Commons categories and your own folder of .strm and .m3u files.</description>
         <disclaimer lang="de_DE">Alle Inhalte stammen aus dem Internet Archive und sind dort gemeinfrei oder frei lizenziert. Gesperrte Items werden nicht abgespielt. Es werden keine fremden Portale ausgelesen und keine Bezahlschranken umgegangen.</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.10.3: Ohne Bibliotheksordner öffnet der Export direkt die Einstellungen. 1.10.2: Aufräumen.</news>
+        <news>1.11.0: Eigene Sammlungen über Internet-Archive-IDs und Commons-Kategorien. 1.10.3: Einstellungen beim Export.</news>
     </extension>
 </addon>
 <addon id="plugin.video.streamkommando.commons" name="Stream Kommando: Commons" version="1.0.0" provider-name="Stream Kommando">
