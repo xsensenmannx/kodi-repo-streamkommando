@@ -22,7 +22,10 @@ from .archive import (
 )
 from .cache import Cache
 from .downloads import Downloads
+from .providers import Providers
 from .streams import Streams
+
+SOURCE_LIMIT = 24
 
 
 class Router(object):
@@ -35,6 +38,7 @@ class Router(object):
         self.mode = self.params.get('mode') or 'root'
         self.cache = Cache()
         self.archive = Archive(self.cache, only_licensed=self.bool_setting('only_licensed'))
+        self.providers = Providers(only_licensed=self.bool_setting('only_licensed'))
         self.settings_url = '%s?mode=settings' % self.base
 
     # -- Helfer -----------------------------------------------------
@@ -80,9 +84,9 @@ class Router(object):
             self.view_root()
 
     def view_root(self):
-        """Hauptmenü wie beim Original: Suche oben, dann die Quellen direkt."""
+        """Hauptmenü: globale Suche, dann die Quellen direkt."""
         handle = self.handle
-        kodigui.add_folder(handle, self.url('search'), kodigui.tr(30002), plot=kodigui.tr(30014))
+        kodigui.add_folder(handle, self.url('search'), kodigui.tr(30002), plot=kodigui.tr(30043))
         kodigui.add_link(handle, self.url('random'), kodigui.tr(30005), plot=kodigui.tr(30015))
         for string_id, collection_id in COLLECTIONS:
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
@@ -106,6 +110,7 @@ class Router(object):
         docs, total = self.archive.collection(collection_id, self.page(), self.rows(), self.sort())
         self.list_movies(docs, total, 'collection', id=collection_id)
 
+    # -- Globale Suche ---------------------------------------------
     def view_search(self):
         term = (self.params.get('q') or '').strip()
         if not term:
@@ -113,9 +118,77 @@ class Router(object):
             if not term:
                 kodigui.end(self.handle, succeeded=False, cache=False)
                 return
-        docs, total = self.archive.find(term, self.page(), self.rows(), self.sort())
-        self.list_movies(docs, total, 'search', q=term)
+        handle = self.handle
+        for provider in self.providers.all():
+            items, total, _more = provider.search(term, 1, 12, self.sort())
+            count = total or len(items)
+            label = '%s · %d' % (kodigui.tr(provider.label_id), count)
+            kodigui.add_folder(handle, self.url('source', key=provider.key, q=term, page=1), label)
+        kodigui.end(handle, content='files', cache=False)
 
+    def view_source(self):
+        key = self.params.get('key') or ''
+        term = (self.params.get('q') or '').strip()
+        provider = self.providers.by_key(key)
+        if provider is None or not term:
+            kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
+            kodigui.end(self.handle, succeeded=False, cache=False)
+            return
+        items, total, more = provider.search(term, self.page(), SOURCE_LIMIT, self.sort())
+        handle = self.handle
+        for item in items:
+            kodigui.add_link(
+                handle,
+                self.url(
+                    'sourceplay',
+                    key=key,
+                    id=item.get('id') or '',
+                    src=item.get('url') or '',
+                    title=item.get('title') or '',
+                    plot=item.get('plot') or '',
+                    thumb=item.get('thumb') or '',
+                ),
+                item.get('title') or item.get('id'),
+                item.get('thumb'),
+                title=item.get('title'),
+                year=item.get('year') or 0,
+                plot=item.get('plot') or '',
+                mediatype='movie',
+            )
+        if not items:
+            kodigui.notify(kodigui.tr(30007))
+        if more or total > self.page() * SOURCE_LIMIT:
+            kodigui.add_folder(
+                handle,
+                self.url('source', key=key, q=term, page=self.page() + 1),
+                kodigui.tr(30006),
+            )
+        kodigui.end(handle, content='videos')
+
+    def view_sourceplay(self):
+        key = self.params.get('key') or ''
+        provider = self.providers.by_key(key)
+        url = provider.play_url(self.params) if provider else ''
+        if not url:
+            self.fail_playback()
+            return
+        title = clean_text(self.params.get('title'), 200) or 'Stream Kommando'
+        play_item = xbmcgui.ListItem(label=title, offscreen=True)
+        play_item.setPath(url)
+        thumb = self.params.get('thumb') or ''
+        play_item.setArt(kodigui.art(thumb if thumb.startswith('https://') else None))
+        kodigui.apply_info(play_item, {
+            'title': title,
+            'plot': clean_text(self.params.get('plot'), 600),
+            'mediatype': 'movie',
+        })
+        kodigui.allow_content_lookup(play_item)
+        mimetype = mime_type(url)
+        if mimetype and hasattr(play_item, 'setMimeType'):
+            play_item.setMimeType(mimetype)
+        xbmcplugin.setResolvedUrl(self.handle, True, play_item)
+
+    # -- Filmarchiv -------------------------------------------------
     def list_movies(self, docs, total, mode, **params):
         handle = self.handle
         for doc in docs:
@@ -194,6 +267,7 @@ class Router(object):
         self.params['id'] = doc['identifier']
         self.view_play()
 
+    # -- Downloads --------------------------------------------------
     def view_download(self):
         """Kontextmenü-Aktion: Film in den Download-Ordner laden."""
         identifier = self.params.get('id') or ''

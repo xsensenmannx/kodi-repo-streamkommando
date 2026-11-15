@@ -68,6 +68,22 @@ msgctxt "#30014"
 msgid "Search across all collections"
 msgstr "Alle Sammlungen durchsuchen"
 
+msgctxt "#30043"
+msgid "Searches the Internet Archive, NASA and Wikimedia Commons"
+msgstr "Durchsucht Internet Archive, NASA und Wikimedia Commons"
+
+msgctxt "#30110"
+msgid "Internet Archive"
+msgstr "Internet Archive"
+
+msgctxt "#30111"
+msgid "NASA"
+msgstr "NASA"
+
+msgctxt "#30112"
+msgid "Wikimedia Commons"
+msgstr "Wikimedia Commons"
+
 msgctxt "#30015"
 msgid "Random film from the archive"
 msgstr "Zufälliger Film aus dem Archiv"

@@ -5,7 +5,7 @@ Repository-Add-on:
 
 | Add-on | Inhalt |
 | --- | --- |
-| Stream Kommando | **Internet Archive**: gemeinfreie Filme, 8 Sammlungen, Suche, Zufallsfilm, Qualitätsauswahl, Download-Manager, eigene `.strm`/`.m3u`-Quellen |
+| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager, eigene `.strm`/`.m3u`-Quellen |
 | Stream Kommando: NASA | **images.nasa.gov**: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
 | Stream Kommando: Commons | **Wikimedia Commons**: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
 
@@ -85,7 +85,7 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 | Menüpunkt | Funktion |
 | --- | --- |
 | Sammlungen | Acht Quellen direkt im Hauptmenü (Spielfilme, Sci-Fi & Horror, Komödie, Stummfilm, Animation, Klassisches Fernsehen, Prelinger-Archiv, Kurzfilme), sortiert nach Downloads/Titel/Jahr, mit Blättern |
-| Suche | Titelsuche über alle Sammlungen |
+| Suche | Globale Suche über Internet Archive, NASA und Wikimedia Commons – Treffer je Quelle gruppiert, Wiedergabe in der besten verfügbaren Qualität |
 | Downloads | heruntergeladene Filme abspielen oder löschen |
 | Zufallsfilm | startet direkt einen zufälligen Film |
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |
