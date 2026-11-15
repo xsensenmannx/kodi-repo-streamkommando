@@ -101,11 +101,12 @@ def export_entries(folder, watchlist_entries, download_entries):
     folder = xbmcvfs.translatePath(folder)
     watch_folder = os.path.join(folder, 'Merkliste')
     download_folder = os.path.join(folder, 'Downloads')
-    try:
-        os.makedirs(watch_folder)
-        os.makedirs(download_folder)
-    except OSError:
-        pass
+    # Unabhängig anlegen: ein bereits vorhandener Ordner darf den anderen nicht verhindern.
+    for target in (watch_folder, download_folder):
+        try:
+            os.makedirs(target, exist_ok=True)
+        except OSError:
+            pass
     count = 0
     used = set()
     for entry in watchlist_entries or []:
