@@ -70,6 +70,15 @@ def allow_content_lookup(item):
             pass
 
 
+def add_context(item, entries):
+    setter = getattr(item, 'addContextMenuItems', None)
+    if entries and callable(setter):
+        try:
+            setter(entries)
+        except Exception:
+            pass
+
+
 def add_folder(handle, url, label, image=None, plot='', folder=True):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art(image))
@@ -78,21 +87,25 @@ def add_folder(handle, url, label, image=None, plot='', folder=True):
     xbmcplugin.addDirectoryItem(handle, url, item, folder)
 
 
-def add_link(handle, url, label, image=None, **info):
+def add_link(handle, url, label, image=None, context=None, **info):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art(image))
     if info:
         apply_info(item, info)
     item.setProperty('IsPlayable', 'true')
     allow_content_lookup(item)
+    add_context(item, context)
     xbmcplugin.addDirectoryItem(handle, url, item, False)
 
 
-def add_file(handle, path, label):
+def add_file(handle, path, label, context=None, **info):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art())
-    apply_info(item, {'title': label, 'mediatype': 'movie'})
+    data = {'title': label, 'mediatype': 'movie'}
+    data.update(info)
+    apply_info(item, data)
     item.setPath(path)
+    add_context(item, context)
     xbmcplugin.addDirectoryItem(handle, path, item, False)
 
 

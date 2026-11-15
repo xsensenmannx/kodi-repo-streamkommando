@@ -48,6 +48,14 @@
                 </setting>
             </group>
         </category>
+        <category id="downloads" label="30031">
+            <group id="1">
+                <setting id="download_path" type="path" label="30032" default="">
+                    <level>0</level>
+                    <control type="button" format="path"/>
+                </setting>
+            </group>
+        </category>
         <category id="streams" label="30003">
             <group id="1">
                 <setting id="own_streams_path" type="path" label="30022" default="">

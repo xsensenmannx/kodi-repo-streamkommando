@@ -78,18 +78,30 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 
 | Menüpunkt | Funktion |
 | --- | --- |
-| Filmarchiv | 8 Sammlungen (Spielfilme, Sci-Fi & Horror, Komödie, Stummfilm, Animation, Klassisches Fernsehen, Prelinger-Archiv, Kurzfilme), sortiert nach Downloads/Titel/Jahr, mit Blättern |
-| Suche | Titelsuche im Filmarchiv |
+| Sammlungen | Acht Quellen direkt im Hauptmenü (Spielfilme, Sci-Fi & Horror, Komödie, Stummfilm, Animation, Klassisches Fernsehen, Prelinger-Archiv, Kurzfilme), sortiert nach Downloads/Titel/Jahr, mit Blättern |
+| Suche | Titelsuche über alle Sammlungen |
+| Downloads | heruntergeladene Filme abspielen oder löschen |
 | Zufallsfilm | startet direkt einen zufälligen Film |
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |
 | Cache leeren | verwirft zwischengespeicherte Archive-Antworten |
 
 Einstellungen: Einträge pro Seite, Sortierung, **Wiedergabequalität** (immer beste
 Qualität oder bei mehreren Dateien fragen), optionaler **Lizenzfilter** (nur Items mit
-`licenseurl`), Cache-Dauer und der Ordner für eigene Streams.
+`licenseurl`), **Download-Ordner**, Cache-Dauer und der Ordner für eigene Streams.
 
 Abspielbare Dateien listen Auflösung, Format und Größe; gesperrte Archive-Items
 (`is_dark`) werden nicht wiedergegeben.
+
+## Downloads
+
+Im Kontextmenü eines Films (`C` auf der Tastatur, lange OK-Taste auf der Fernbedienung)
+startet **Herunterladen** den Download in den eingestellten Ordner: mit Fortschrittsdialog,
+Abbrechen, Qualitätsauswahl bei mehreren Dateien und einer `.json`-Begleitdatei für Titel,
+Handlung, Jahr und Dauer. Unter **Downloads** im Hauptmenü liegen die fertigen Filme
+zum Abspielen; **Löschen** im Kontextmenü entfernt Datei und Begleitdatei.
+Falls der Download-Ordner noch nicht gesetzt ist, verweist das Add-on auf die Einstellungen.
+Der Download läuft im Vordergrund mit Fortschrittsdialog – Kodi bleibt bedienbar,
+aber der Vorgang endet, wenn du das Add-on schließt.
 
 ## Rechtliches
 

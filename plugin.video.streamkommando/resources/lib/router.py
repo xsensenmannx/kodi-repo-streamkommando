@@ -4,6 +4,7 @@
 import sys
 import urllib.parse
 
+import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
@@ -20,6 +21,7 @@ from .archive import (
     to_year,
 )
 from .cache import Cache
+from .downloads import Downloads
 from .streams import Streams
 
 
@@ -78,10 +80,13 @@ class Router(object):
             self.view_root()
 
     def view_root(self):
+        """Hauptmenü wie beim Original: Suche oben, dann die Quellen direkt."""
         handle = self.handle
-        kodigui.add_folder(handle, self.url('archive'), kodigui.tr(30001), plot=kodigui.tr(30014))
-        kodigui.add_folder(handle, self.url('search'), kodigui.tr(30002))
+        kodigui.add_folder(handle, self.url('search'), kodigui.tr(30002), plot=kodigui.tr(30014))
         kodigui.add_link(handle, self.url('random'), kodigui.tr(30005), plot=kodigui.tr(30015))
+        for string_id, collection_id in COLLECTIONS:
+            kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
+        kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
         kodigui.add_folder(handle, self.url('streams'), kodigui.tr(30003))
         kodigui.add_folder(handle, self.settings_url, kodigui.tr(30004), folder=False)
         kodigui.add_folder(handle, self.url('clear'), kodigui.tr(30010), folder=False)
@@ -95,12 +100,6 @@ class Router(object):
         self.cache.clear()
         kodigui.notify(kodigui.tr(30011))
         kodigui.end(self.handle, content='files', succeeded=False, cache=False)
-
-    def view_archive(self):
-        handle = self.handle
-        for string_id, collection_id in COLLECTIONS:
-            kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
-        kodigui.end(handle, content='files', cache=False)
 
     def view_collection(self):
         collection_id = self.params.get('id') or ''
@@ -124,11 +123,16 @@ class Router(object):
             if not identifier:
                 continue
             title = clean_text(doc.get('title'), 200) or identifier
+            context = [(
+                kodigui.tr(30033),
+                'RunPlugin(%s)' % self.url('download', id=identifier),
+            )]
             kodigui.add_link(
                 handle,
                 self.url('play', id=identifier),
                 title,
                 IMG_URL + urllib.parse.quote(identifier),
+                context=context,
                 title=title,
                 year=to_year(doc.get('year')),
                 plot=clean_text(doc.get('description'), 500),
@@ -139,6 +143,9 @@ class Router(object):
         if total > self.page() * self.rows():
             page_params = dict(params, page=self.page() + 1)
             kodigui.add_folder(handle, self.url(mode, **page_params), kodigui.tr(30006))
+        if hasattr(xbmcplugin, 'addSortMethod'):
+            xbmcplugin.addSortMethod(handle, xbmcplugin.SORT_METHOD_VIDEO_TITLE)
+            xbmcplugin.addSortMethod(handle, xbmcplugin.SORT_METHOD_VIDEO_YEAR)
         kodigui.end(handle, content='videos')
 
     def view_play(self):
@@ -186,6 +193,66 @@ class Router(object):
             return
         self.params['id'] = doc['identifier']
         self.view_play()
+
+    def view_download(self):
+        """Kontextmenü-Aktion: Film in den Download-Ordner laden."""
+        identifier = self.params.get('id') or ''
+        item = self.archive.item(identifier) if identifier else None
+        sources = (item or {}).get('sources') or []
+        if not item or not sources:
+            kodigui.notify(kodigui.tr(30009), icon=xbmcgui.NOTIFICATION_ERROR)
+            return
+        downloads = Downloads()
+        if not downloads.folder:
+            kodigui.notify(kodigui.tr(30039))
+            return
+        index = 0
+        if len(sources) > 1:
+            index = xbmcgui.Dialog().select(kodigui.tr(30030), [source_label(s) for s in sources])
+            if index < 0:
+                return
+        target = downloads.path_for(item, sources[index])
+        ok, message_id = downloads.save(item, sources[index], target)
+        kodigui.notify(
+            kodigui.tr(message_id),
+            icon=xbmcgui.NOTIFICATION_INFO if ok else xbmcgui.NOTIFICATION_ERROR,
+        )
+
+    def view_downloads(self):
+        handle = self.handle
+        downloads = Downloads()
+        if not downloads.folder:
+            kodigui.notify(kodigui.tr(30039))
+            kodigui.add_folder(handle, self.settings_url, kodigui.tr(30013), folder=False)
+            kodigui.end(handle, content='files', succeeded=False, cache=False)
+            return
+        entries = downloads.items()
+        if not entries:
+            kodigui.notify(kodigui.tr(30007))
+        for entry in entries:
+            context = [(
+                kodigui.tr(30037),
+                'RunPlugin(%s)' % self.url('delete', path=entry['path']),
+            )]
+            kodigui.add_file(
+                handle,
+                entry['path'],
+                entry['label'],
+                context=context,
+                plot=entry['plot'],
+                year=entry['year'],
+                duration=entry['duration'],
+            )
+        kodigui.end(handle, content='movies', cache=False)
+
+    def view_delete(self):
+        path = self.params.get('path') or ''
+        if not path:
+            return
+        if xbmcgui.Dialog().yesno(kodigui.tr(30037), kodigui.tr(30038), path):
+            Downloads().delete(path)
+            kodigui.notify(kodigui.tr(30041))
+            xbmc.executebuiltin('Container.Refresh')
 
     def view_streams(self):
         handle = self.handle

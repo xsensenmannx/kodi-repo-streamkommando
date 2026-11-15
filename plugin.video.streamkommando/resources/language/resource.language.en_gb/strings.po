@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: plugin.video.streamkommando 1.1.0\n"
+"Project-Id-Version: plugin.video.streamkommando 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 18:00+0000\n"
-"PO-Revision-Date: 2026-11-15 18:00+0000\n"
+"POT-Creation-Date: 2026-11-15 20:00+0000\n"
+"PO-Revision-Date: 2026-11-15 20:00+0000\n"
 "Last-Translator: Stream Kommando\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -65,8 +65,8 @@ msgid "Open Settings"
 msgstr "Open Settings"
 
 msgctxt "#30014"
-msgid "Public domain films from the Internet Archive"
-msgstr "Public domain films from the Internet Archive"
+msgid "Search across all collections"
+msgstr "Search across all collections"
 
 msgctxt "#30015"
 msgid "Random film from the archive"
@@ -123,6 +123,50 @@ msgstr "Only items with a license"
 msgctxt "#30030"
 msgid "Choose quality"
 msgstr "Choose quality"
+
+msgctxt "#30031"
+msgid "Downloads"
+msgstr "Downloads"
+
+msgctxt "#30032"
+msgid "Download folder"
+msgstr "Download folder"
+
+msgctxt "#30033"
+msgid "Download"
+msgstr "Download"
+
+msgctxt "#30034"
+msgid "Downloading film"
+msgstr "Downloading film"
+
+msgctxt "#30035"
+msgid "Download finished"
+msgstr "Download finished"
+
+msgctxt "#30036"
+msgid "Download failed"
+msgstr "Download failed"
+
+msgctxt "#30037"
+msgid "Delete"
+msgstr "Delete"
+
+msgctxt "#30038"
+msgid "Delete this file?"
+msgstr "Delete this file?"
+
+msgctxt "#30039"
+msgid "Set a download folder in the settings"
+msgstr "Set a download folder in the settings"
+
+msgctxt "#30040"
+msgid "Download cancelled"
+msgstr "Download cancelled"
+
+msgctxt "#30041"
+msgid "File deleted"
+msgstr "File deleted"
 
 msgctxt "#30101"
 msgid "Sci-Fi & Horror"
