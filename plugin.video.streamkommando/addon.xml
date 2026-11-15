@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.7.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.8.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -17,6 +17,6 @@
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.7.0: Merkliste für Treffer aller Quellen, lokal gespeichert, mit eigenem Menüpunkt und Kontextmenü. 1.6.0: Fehlerbehandlung.</news>
+        <news>1.8.0: Verlauf mit Wiedergabeposition für alle Quellen, Fortsetzen-Dialog und eigenem Menüpunkt. 1.7.0: Merkliste.</news>
     </extension>
 </addon>

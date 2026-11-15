@@ -72,6 +72,34 @@ msgctxt "#30043"
 msgid "Searches the Internet Archive, NASA and Wikimedia Commons"
 msgstr "Durchsucht Internet Archive, NASA und Wikimedia Commons"
 
+msgctxt "#30054"
+msgid "History"
+msgstr "Verlauf"
+
+msgctxt "#30055"
+msgid "Resume playback?"
+msgstr "Wiedergabe fortsetzen?"
+
+msgctxt "#30056"
+msgid "Continue at"
+msgstr "Fortsetzen bei"
+
+msgctxt "#30057"
+msgid "Remove from history"
+msgstr "Aus dem Verlauf entfernen"
+
+msgctxt "#30058"
+msgid "Recently watched with resume position"
+msgstr "Zuletzt gesehen mit Wiedergabeposition"
+
+msgctxt "#30059"
+msgid "Watched"
+msgstr "Gesehen"
+
+msgctxt "#30060"
+msgid "Removed from history"
+msgstr "Aus dem Verlauf entfernt"
+
 msgctxt "#30048"
 msgid "Add to watchlist"
 msgstr "Zur Merkliste hinzufügen"

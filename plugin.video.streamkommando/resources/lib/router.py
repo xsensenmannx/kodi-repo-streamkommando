@@ -23,6 +23,7 @@ from .archive import (
 )
 from .cache import Cache
 from .downloads import VIDEO_SUFFIXES, Downloads
+from .history import History, format_position
 from .providers import Providers
 from .streams import Streams
 from .watchlist import Watchlist
@@ -94,6 +95,7 @@ class Router(object):
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
         kodigui.add_folder(handle, self.url('source', key='blender', page=1), kodigui.tr(30044), plot=kodigui.tr(30045))
         kodigui.add_folder(handle, self.url('watchlist'), kodigui.tr(30050), plot=kodigui.tr(30051))
+        kodigui.add_folder(handle, self.url('history'), kodigui.tr(30054), plot=kodigui.tr(30058))
         kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
         kodigui.add_folder(handle, self.url('streams'), kodigui.tr(30003))
         kodigui.add_folder(handle, self.settings_url, kodigui.tr(30004), folder=False)
@@ -282,6 +284,63 @@ class Router(object):
         self.params['key'] = provider
         self.view_sourceplay()
 
+    def view_history(self):
+        handle = self.handle
+        entries = History().entries()
+        if not entries:
+            kodigui.notify(kodigui.tr(30007))
+        for entry in entries:
+            position = entry.get('position') or 0
+            plot = entry.get('plot') or ''
+            resume = '%s %s' % (kodigui.tr(30056), format_position(position)) if position else kodigui.tr(30059)
+            if plot:
+                plot = '%s · %s' % (resume, plot)
+            else:
+                plot = resume
+            context = [(
+                kodigui.tr(30057),
+                'RunPlugin(%s)' % self.url(
+                    'historyremove',
+                    provider=entry.get('provider') or '',
+                    id=entry.get('id') or '',
+                ),
+            )]
+            kodigui.add_link(
+                handle,
+                self.url(
+                    'historyplay',
+                    provider=entry.get('provider') or '',
+                    id=entry.get('id') or '',
+                    src=entry.get('src') or '',
+                    title=entry.get('title') or '',
+                    plot=entry.get('plot') or '',
+                    thumb=entry.get('thumb') or '',
+                    year=entry.get('year') or 0,
+                ),
+                entry.get('title') or entry.get('id'),
+                entry.get('thumb'),
+                context=context,
+                title=entry.get('title') or entry.get('id'),
+                year=entry.get('year') or 0,
+                plot=plot,
+                mediatype='movie',
+            )
+        kodigui.end(handle, content='videos', cache=False)
+
+    def view_historyplay(self):
+        provider = self.params.get('provider') or ''
+        if provider in ('', 'archive'):
+            self.view_play()
+            return
+        self.params['key'] = provider
+        self.view_sourceplay()
+
+    def view_historyremove(self):
+        removed = History().remove(self.params.get('provider') or '', self.params.get('id') or '')
+        if removed:
+            kodigui.notify(kodigui.tr(30060))
+        xbmc.executebuiltin('Container.Refresh')
+
     def view_watchlisttoggle(self):
         try:
             year = int(self.params.get('year') or 0)
@@ -315,6 +374,8 @@ class Router(object):
         if not url:
             self.fail_playback()
             return
+        identifier = self.params.get('id') or self.params.get('src') or ''
+        start_position = self.ask_resume(key, identifier)
         title = clean_text(self.params.get('title'), 200) or 'Stream Kommando'
         play_item = xbmcgui.ListItem(label=title, offscreen=True)
         play_item.setPath(url)
@@ -330,6 +391,12 @@ class Router(object):
         if mimetype and hasattr(play_item, 'setMimeType'):
             play_item.setMimeType(mimetype)
         xbmcplugin.setResolvedUrl(self.handle, True, play_item)
+        self.track_playback(key, identifier, url, {
+            'title': title,
+            'plot': clean_text(self.params.get('plot'), 600),
+            'thumb': thumb if thumb.startswith('https://') else '',
+            'year': self.params.get('year') or 0,
+        }, start_position)
 
     # -- Filmarchiv -------------------------------------------------
     def list_movies(self, docs, total, mode, **params):
@@ -380,6 +447,47 @@ class Router(object):
             xbmcplugin.addSortMethod(handle, xbmcplugin.SORT_METHOD_VIDEO_YEAR)
         kodigui.end(handle, content='videos')
 
+    def ask_resume(self, provider, identifier):
+        """Fragt nach dem Fortsetzen und liefert die Startposition in Sekunden."""
+        position = History().position(provider, identifier)
+        if position < 30:
+            return 0
+        question = '%s %s' % (kodigui.tr(30056), format_position(position))
+        if xbmcgui.Dialog().yesno(kodigui.tr(30055), question):
+            return position
+        History().reset_position(provider, identifier)
+        return 0
+
+    def track_playback(self, provider, identifier, url, meta, start_position=0):
+        """Hält die Wiedergabeposition im Verlauf fest, solange der Player läuft."""
+        history = History()
+        entry = dict(meta)
+        entry.update({'provider': provider, 'id': identifier, 'src': url})
+        history.touch(entry)
+        player = xbmc.Player()
+        for _step in range(10):
+            try:
+                if player.isPlaying():
+                    break
+            except Exception:
+                return
+            xbmc.sleep(200)
+        if start_position:
+            try:
+                player.seekTime(start_position)
+            except Exception:
+                pass
+        while True:
+            try:
+                if not player.isPlaying():
+                    break
+                position = player.getTime()
+                total = player.getTotalTime()
+            except Exception:
+                break
+            history.update_position(provider, identifier, position, total)
+            xbmc.sleep(5000)
+
     def view_play(self):
         identifier = self.params.get('id') or ''
         item = self.archive.item(identifier) if identifier else None
@@ -388,6 +496,7 @@ class Router(object):
             self.fail_playback()
             return
 
+        start_position = self.ask_resume('archive', identifier)
         chosen = sources[0]
         if len(sources) > 1 and self.int_setting('quality_mode', 0) == 1:
             labels = [source_label(source) for source in sources]
@@ -416,6 +525,12 @@ class Router(object):
         if mimetype and hasattr(play_item, 'setMimeType'):
             play_item.setMimeType(mimetype)
         xbmcplugin.setResolvedUrl(self.handle, True, play_item)
+        self.track_playback('archive', identifier, chosen['url'], {
+            'title': item['title'],
+            'plot': item.get('plot', ''),
+            'thumb': IMG_URL + urllib.parse.quote(identifier),
+            'year': item.get('year') or 0,
+        }, start_position)
 
     def view_random(self):
         doc = self.archive.random_movie(self.rows())
