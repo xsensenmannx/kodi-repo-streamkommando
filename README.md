@@ -124,9 +124,41 @@ Falls der Download-Ordner noch nicht gesetzt ist, verweist das Add-on auf die Ei
 Der Download läuft im Vordergrund mit Fortschrittsdialog – Kodi bleibt bedienbar,
 aber der Vorgang endet, wenn du das Add-on schließt.
 
-## Rechtliches
+## Quellen und Lizenzen
 
-Alle Inhalte kommen aus dem Internet Archive und sind dort gemeinfrei oder frei
-lizenziert. Das Add-on liest keine fremden Streaming-Portale aus und umgeht keine
-Bezahlscharanken oder Kopierschutzmaßnahmen. Für eigene Streams ist der Nutzer
-selbst verantwortlich, dass er die nötigen Rechte besitzt.
+Stream Kommando spielt keine eigenen Inhalte ab, sondern verlinkt auf öffentliche
+Quellen. Für jedes Werk gelten die Rechte der jeweiligen Quelle; das Add-on ändert
+keine Lizenzen und entfernt keine Rechtehinweise. Maßgeblich ist immer die Angabe
+beim konkreten Werk – nicht die Sammlung oder die Quelle als Ganzes.
+
+| Quelle | Verwendung | Rechte / Lizenz | Hinweise im Add-on |
+| --- | --- | --- | --- |
+| **Internet Archive** ([archive.org](https://archive.org)) | 8 kuratierte Filmsammlungen, globale Suche, eigene Collection-IDs | **Item-spezifisch:** gemeinfrei, frei lizenziert (z. B. Creative Commons) oder andere Rechte. Das Internet Archive garantiert keinen Rechtsstatus. | Optionaler **Lizenzfilter** (`licenseurl`) beschränkt die Archive-Treffer auf Items mit hinterlegter Lizenz; gesperrte Items (`is_dark`) werden nicht abgespielt. Ohne Filter können auch Items ohne Rechteangabe erscheinen – dann die Item-Seite prüfen. |
+| **NASA** ([images.nasa.gov](https://images.nasa.gov)) | Videos, Themenmenüs, Suche | Nach US-Recht **in der Regel nicht urheberrechtlich geschützt**; Nutzung nach den NASA Media Usage Guidelines. Einzelne Beiträge können Rechte Dritter enthalten; NASA-Zeichen und Logo sind geschützt. | Die Quelle wird als NASA angegeben. Keine Billigung durch NASA implizieren; Rechte des Einzelbeitrags prüfen. |
+| **Wikimedia Commons** ([commons.wikimedia.org](https://commons.wikimedia.org)) | Freie Videos, Themen, Suche, eigene Kategorien; auch die Blender-Filme werden über Commons aufgelöst | **Je Datei freie Lizenz**, z. B. CC0, Public Domain, CC BY oder CC BY-SA. | Lizenz-Kurzname und Autor stehen in der Beschreibung. Bei CC BY/BY-SA Namensnennung und ShareAlike beachten; vollständige Lizenz auf der Commons-Dateiseite. |
+| **Blender Open Movies** (über Commons) | 7 freie Filme der Blender Foundation | **CC BY** – je nach Film Version 2.5, 3.0 oder 4.0. | Urheber: Blender Foundation; Namensnennung erforderlich. Im Add-on als „Blender Foundation, CC-BY“ gekennzeichnet. |
+| **Eigene Streams** | Ordner mit `.strm`/`.m3u`-Dateien aus den Einstellungen | Rechte liegen beim Nutzer. | Das Add-on prüft keine Rechte. Nur selbst lizenzierte oder anderweitig erlaubte Inhalte einbinden. |
+
+Eigene Sammlungen über Internet-Archive-Collection-IDs oder Commons-Kategorien
+ändern nichts an den Rechten der enthaltenen Werke: Es gelten die Bedingungen der
+jeweiligen Quelle.
+
+### Feste Grundsätze
+
+- Ausschließlich öffentliche Schnittstellen: `archive.org`, `images-api.nasa.gov`
+  und `commons.wikimedia.org` – keine API-Schlüssel, keine Konten.
+- Keine Streaming-Portale oder Scraper, keine Hoster-/URLResolver, keine
+  automatischen Fremdcode-Updates.
+- Keine Umgehung von Bezahlschranken, DRM, Geoblocking oder anderen
+  Zugriffsbeschränkungen.
+- Downloads ersetzen keine Lizenzprüfung. Bei unklaren oder fehlenden
+  Rechteangaben vor der Weiterverwendung den Rechteinhaber fragen.
+
+**Offizielle Lizenz- und Rechtehinweise:**
+[Internet Archive – Rights](https://help.archive.org/help/rights) ·
+[NASA – Images and Media Usage Guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/) ·
+[Wikimedia Commons – Licensing](https://commons.wikimedia.org/wiki/Commons:Licensing) ·
+[Blender Open Movies](https://studio.blender.org/films/) ·
+[Creative Commons – Lizenzen](https://creativecommons.org/licenses/)
+
+Stand: November 2026

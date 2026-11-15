@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.12.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.12.1" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -11,12 +11,13 @@
         <summary lang="en_GB">Public domain films from the Internet Archive</summary>
         <description lang="de_DE">Stream Kommando durchsucht und spielt freie Filme und Videos: globale Suche über Internet Archive, NASA und Wikimedia Commons, kuratierte Blender Open Movies, Sammlungen direkt im Hauptmenü, Zufallsfilm, Qualitätsauswahl, Komplettes Filmerlebnis mit Internet Archive, NASA-Themen, Wikimedia-Commons-Themen und Blender Open Movies: globale Suche, Merkliste, Verlauf mit Wiedergabeposition, Untertitelspuren, Download-Manager, Filmbibliothek, Export als .strm/.nfo, eigene Sammlungen und eigene .strm/.m3u-Dateien.</description>
         <description lang="en_GB">Stream Kommando browses and plays free films and videos: global search across the Internet Archive, NASA and Wikimedia Commons, curated Blender Open Movies, collections in the main menu, a random movie, quality selection, a complete movie experience with Internet Archive, NASA topics, Wikimedia Commons topics and Blender Open Movies: global search, watchlist, resume history, subtitle tracks, download manager, movie library, .strm/.nfo export, custom collections and your own .strm/.m3u files.</description>
-        <disclaimer lang="de_DE">Alle Inhalte stammen aus dem Internet Archive und sind dort gemeinfrei oder frei lizenziert. Gesperrte Items werden nicht abgespielt. Es werden keine fremden Portale ausgelesen und keine Bezahlschranken umgegangen.</disclaimer>
+        <disclaimer lang="de_DE">Stream Kommando verlinkt ausschließlich auf öffentliche Quellen: Internet Archive (Rechte je Item), NASA (Nutzung nach den NASA Media Usage Guidelines; Beiträge Dritter möglich), Wikimedia Commons (freie Lizenz je Datei) und Blender Open Movies (CC BY). Maßgeblich sind die Rechteangaben beim jeweiligen Werk. Gesperrte Items werden nicht abgespielt; es werden keine fremden Portale ausgelesen und keine Bezahlschranken, DRM oder Geoblocking umgangen. Für eigene Streams sind Nutzer selbst verantwortlich.</disclaimer>
+        <disclaimer lang="en_GB">Stream Kommando links only to public sources: Internet Archive (rights vary per item), NASA (use under the NASA Media Usage Guidelines; third-party material possible), Wikimedia Commons (free licence per file) and Blender Open Movies (CC BY). The rights stated for each work apply. Unavailable items are not played; no third-party portals are scraped and no paywalls, DRM or geo-blocking are bypassed. Users are responsible for their own streams.</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.12.0: NASA- und Commons-Themen direkt im Haupt-Add-on – ein Add-on für alles. 1.11.0: Eigene Sammlungen.</news>
+        <news>1.12.1: Quellen- und Lizenzhinweise im Disclaimer präzisiert. 1.12.0: NASA- und Commons-Themen direkt im Haupt-Add-on.</news>
     </extension>
 </addon>
