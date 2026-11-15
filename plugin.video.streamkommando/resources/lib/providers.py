@@ -12,6 +12,7 @@ import urllib.request
 
 import xbmc
 
+from . import subtitles
 from .archive import IMG_URL, Archive, clean_text, to_year
 from .cache import Cache
 
@@ -98,6 +99,10 @@ class ArchiveProvider(object):
     def play_url(self, params):
         item = self.api.item(params.get('id') or '')
         return (item or {}).get('url') or ''
+
+    def subtitles(self, params):
+        item = self.api.item(params.get('id') or '')
+        return (item or {}).get('subtitles') or []
 
 
 class NasaProvider(object):
@@ -262,6 +267,9 @@ class CommonsProvider(object):
         src = params.get('src') or ''
         return src if src.startswith('https://') else ''
 
+    def subtitles(self, params):
+        return subtitles.commons_tracks_for_title(params.get('id') or '', self.cache)
+
 
 class BlenderProvider(object):
     """Kuratierte Blender-Open-Movies-Sammlung, aufgelöst über Wikimedia Commons."""
@@ -325,6 +333,9 @@ class BlenderProvider(object):
             self.cache.set(key, url)
             return url
         return ''
+
+    def subtitles(self, params):
+        return subtitles.commons_tracks_for_title(params.get('id') or '', self.cache)
 
 
 class Providers(object):

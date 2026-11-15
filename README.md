@@ -89,6 +89,7 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 | Blender Open Movies | Sieben freie Filme der Blender Foundation (CC-BY) als eigene Sammlung, mit Wiedergabe und Download |
 | Meine Merkliste | Treffer aller Quellen lokal merken (Kontextmenü), direkt aus der Liste abspielen oder entfernen |
 | Verlauf | Zuletzt gesehen mit Wiedergabeposition, Fortsetzen-Dialog und Entfernen per Kontextmenü |
+| Untertitel | SRT aus dem Internet Archive und TimedText (VTT) von Commons als Kodi-Untertitelspuren |
 | Downloads | heruntergeladene Filme abspielen oder löschen |
 | Zufallsfilm | startet direkt einen zufälligen Film |
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |

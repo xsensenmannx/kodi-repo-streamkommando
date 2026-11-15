@@ -11,6 +11,7 @@ import xbmcgui
 import xbmcplugin
 
 from . import kodigui
+from . import subtitles
 from .archive import (
     COLLECTIONS,
     IMG_URL,
@@ -390,6 +391,12 @@ class Router(object):
         mimetype = mime_type(url)
         if mimetype and hasattr(play_item, 'setMimeType'):
             play_item.setMimeType(mimetype)
+        try:
+            tracks = provider.subtitles(self.params) if hasattr(provider, 'subtitles') else []
+        except Exception as error:
+            xbmc.log('Stream Kommando: Untertitelquelle fehlgeschlagen: %s' % error, xbmc.LOGWARNING)
+            tracks = []
+        subtitles.attach(play_item, tracks)
         xbmcplugin.setResolvedUrl(self.handle, True, play_item)
         self.track_playback(key, identifier, url, {
             'title': title,
@@ -524,6 +531,7 @@ class Router(object):
         mimetype = mime_type(chosen['url'])
         if mimetype and hasattr(play_item, 'setMimeType'):
             play_item.setMimeType(mimetype)
+        subtitles.attach(play_item, item.get('subtitles') or [])
         xbmcplugin.setResolvedUrl(self.handle, True, play_item)
         self.track_playback('archive', identifier, chosen['url'], {
             'title': item['title'],

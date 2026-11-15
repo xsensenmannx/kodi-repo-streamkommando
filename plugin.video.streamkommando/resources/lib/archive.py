@@ -10,6 +10,7 @@ import urllib.request
 
 import xbmc
 
+from . import subtitles
 from .cache import Cache
 
 SEARCH_URL = 'https://archive.org/advancedsearch.php'
@@ -219,7 +220,8 @@ class Archive(object):
     def _digest(self, identifier, payload):
         meta = payload.get('metadata') or {}
         restricted = bool(payload.get('is_dark'))
-        sources = [] if restricted else self._sources(identifier, payload.get('files') or [])
+        files = payload.get('files') or []
+        sources = [] if restricted else self._sources(identifier, files)
         return {
             'identifier': identifier,
             'title': clean_text(meta.get('title'), 200) or identifier,
@@ -229,6 +231,8 @@ class Archive(object):
             'duration': to_seconds(meta.get('runtime')),
             'restricted': restricted,
             'sources': sources,
+            'subtitles': [] if restricted else subtitles.archive_tracks(
+                files, identifier, subtitles.language_code(meta.get('language'))),
             'url': sources[0]['url'] if sources else '',
         }
 
