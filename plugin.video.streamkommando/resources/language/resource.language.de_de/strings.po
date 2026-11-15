@@ -100,6 +100,34 @@ msgctxt "#30060"
 msgid "Removed from history"
 msgstr "Aus dem Verlauf entfernt"
 
+msgctxt "#30061"
+msgid "Library"
+msgstr "Bibliothek"
+
+msgctxt "#30062"
+msgid "Library folder"
+msgstr "Bibliotheksordner"
+
+msgctxt "#30063"
+msgid "Export to library"
+msgstr "Filmbibliothek exportieren"
+
+msgctxt "#30064"
+msgid "Write watchlist and downloads as .strm with .nfo into the library folder"
+msgstr "Merkliste und Downloads als .strm mit .nfo in den Bibliotheksordner schreiben"
+
+msgctxt "#30065"
+msgid "No library folder set"
+msgstr "Kein Bibliotheksordner eingestellt"
+
+msgctxt "#30066"
+msgid "Exported movies"
+msgstr "Exportierte Filme"
+
+msgctxt "#30067"
+msgid "Nothing to export"
+msgstr "Nichts zu exportieren"
+
 msgctxt "#30048"
 msgid "Add to watchlist"
 msgstr "Zur Merkliste hinzufügen"

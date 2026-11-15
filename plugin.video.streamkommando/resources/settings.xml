@@ -56,6 +56,14 @@
                 </setting>
             </group>
         </category>
+        <category id="library" label="30061">
+            <group id="1">
+                <setting id="library_path" type="path" label="30062" default="">
+                    <level>0</level>
+                    <control type="button" format="path"/>
+                </setting>
+            </group>
+        </category>
         <category id="streams" label="30003">
             <group id="1">
                 <setting id="own_streams_path" type="path" label="30022" default="">

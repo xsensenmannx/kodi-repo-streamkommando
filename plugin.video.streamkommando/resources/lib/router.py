@@ -25,6 +25,7 @@ from .archive import (
 from .cache import Cache
 from .downloads import VIDEO_SUFFIXES, Downloads
 from .history import History, format_position
+from .library import LibraryExport
 from .providers import Providers
 from .streams import Streams
 from .watchlist import Watchlist
@@ -98,6 +99,8 @@ class Router(object):
         kodigui.add_folder(handle, self.url('watchlist'), kodigui.tr(30050), plot=kodigui.tr(30051))
         kodigui.add_folder(handle, self.url('history'), kodigui.tr(30054), plot=kodigui.tr(30058))
         kodigui.add_folder(handle, self.url('downloads'), kodigui.tr(30031))
+        kodigui.add_folder(handle, self.url('libraryexport'), kodigui.tr(30063),
+                            plot=kodigui.tr(30064), folder=False)
         kodigui.add_folder(handle, self.url('streams'), kodigui.tr(30003))
         kodigui.add_folder(handle, self.settings_url, kodigui.tr(30004), folder=False)
         kodigui.add_folder(handle, self.url('clear'), kodigui.tr(30010), folder=False)
@@ -600,6 +603,21 @@ class Router(object):
                 duration=entry['duration'],
             )
         kodigui.end(handle, content='movies', cache=False)
+
+    def view_libraryexport(self):
+        """Merkliste und Downloads als .strm + .nfo exportieren und die Bibliothek aktualisieren."""
+        exporter = LibraryExport()
+        if not exporter.folder:
+            kodigui.notify(kodigui.tr(30065), icon=xbmcgui.NOTIFICATION_ERROR)
+            kodigui.end(self.handle, succeeded=False, cache=False)
+            return
+        count = exporter.export()
+        if count:
+            kodigui.notify('%s: %d' % (kodigui.tr(30066), count))
+            xbmc.executebuiltin('UpdateLibrary(video)')
+        else:
+            kodigui.notify(kodigui.tr(30067))
+        kodigui.end(self.handle, succeeded=False, cache=False)
 
     def view_delete(self):
         path = self.params.get('path') or ''

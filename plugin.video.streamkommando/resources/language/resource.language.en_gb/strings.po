@@ -100,6 +100,34 @@ msgctxt "#30060"
 msgid "Removed from history"
 msgstr "Removed from history"
 
+msgctxt "#30061"
+msgid "Library"
+msgstr "Library"
+
+msgctxt "#30062"
+msgid "Library folder"
+msgstr "Library folder"
+
+msgctxt "#30063"
+msgid "Export to library"
+msgstr "Export to library"
+
+msgctxt "#30064"
+msgid "Write watchlist and downloads as .strm with .nfo into the library folder"
+msgstr "Write watchlist and downloads as .strm with .nfo into the library folder"
+
+msgctxt "#30065"
+msgid "No library folder set"
+msgstr "No library folder set"
+
+msgctxt "#30066"
+msgid "Exported movies"
+msgstr "Exported movies"
+
+msgctxt "#30067"
+msgid "Nothing to export"
+msgstr "Nothing to export"
+
 msgctxt "#30048"
 msgid "Add to watchlist"
 msgstr "Add to watchlist"
