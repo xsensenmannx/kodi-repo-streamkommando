@@ -5,7 +5,7 @@ Repository-Add-on:
 
 | Add-on | Inhalt |
 | --- | --- |
-| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager, eigene `.strm`/`.m3u`-Quellen |
+| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager für alle drei Quellen, eigene `.strm`/`.m3u`-Quellen |
 | Stream Kommando: NASA | **images.nasa.gov**: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
 | Stream Kommando: Commons | **Wikimedia Commons**: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
 
@@ -103,7 +103,9 @@ Abspielbare Dateien listen Auflösung, Format und Größe; gesperrte Archive-Ite
 Im Kontextmenü eines Films (`C` auf der Tastatur, lange OK-Taste auf der Fernbedienung)
 startet **Herunterladen** den Download in den eingestellten Ordner: mit Fortschrittsdialog,
 Abbrechen, Qualitätsauswahl bei mehreren Dateien und einer `.json`-Begleitdatei für Titel,
-Handlung, Jahr und Dauer. Unter **Downloads** im Hauptmenü liegen die fertigen Filme
+Handlung, Jahr und Dauer. Das gilt für Internet-Archive-Filme genauso wie für NASA- und
+Commons-Treffer der globalen Suche; die Endung folgt der Quelle (`.mp4` bei der NASA,
+`.webm` bei Commons). Unter **Downloads** im Hauptmenü liegen die fertigen Filme
 zum Abspielen; **Löschen** im Kontextmenü entfernt Datei und Begleitdatei.
 Falls der Download-Ordner noch nicht gesetzt ist, verweist das Add-on auf die Einstellungen.
 Der Download läuft im Vordergrund mit Fortschrittsdialog – Kodi bleibt bedienbar,

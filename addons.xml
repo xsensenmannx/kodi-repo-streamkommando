@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.3.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.4.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -18,7 +18,7 @@
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.3.0: Globale Suche über Internet Archive, NASA und Wikimedia Commons mit Treffern je Quelle. 1.2.0: Download-Manager mit lokaler Filmbibliothek.</news>
+        <news>1.4.0: Download-Manager für NASA- und Commons-Treffer (Fortschritt, Abbruch, Filmbibliothek). 1.3.0: Globale Suche über alle drei Quellen.</news>
     </extension>
 </addon>
 <addon id="plugin.video.streamkommando.commons" name="Stream Kommando: Commons" version="1.0.0" provider-name="Stream Kommando">

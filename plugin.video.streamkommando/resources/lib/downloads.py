@@ -5,6 +5,7 @@ import json
 import os
 import re
 import time
+import urllib.parse
 import urllib.request
 
 import xbmcaddon
@@ -48,7 +49,11 @@ class Downloads(object):
         title = item.get('title') or 'Film'
         if item.get('year'):
             title = '%s (%s)' % (title, item['year'])
-        suffix = os.path.splitext(str(source.get('name') or ''))[1].lower() or '.mp4'
+        suffix = os.path.splitext(str(source.get('name') or ''))[1].lower()
+        if not suffix:
+            suffix = os.path.splitext(urllib.parse.urlparse(str(source.get('url') or '')).path)[1].lower()
+        if suffix not in VIDEO_SUFFIXES:
+            suffix = '.mp4'
         name = safe_name(title)
         target = _join(self.folder, name + suffix)
         counter = 2

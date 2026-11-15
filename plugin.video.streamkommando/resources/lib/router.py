@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Alle Ansichten des Plugins."""
 
+import os
 import sys
 import urllib.parse
 
@@ -21,7 +22,7 @@ from .archive import (
     to_year,
 )
 from .cache import Cache
-from .downloads import Downloads
+from .downloads import VIDEO_SUFFIXES, Downloads
 from .providers import Providers
 from .streams import Streams
 
@@ -137,6 +138,18 @@ class Router(object):
         items, total, more = provider.search(term, self.page(), SOURCE_LIMIT, self.sort())
         handle = self.handle
         for item in items:
+            context = [(
+                kodigui.tr(30033),
+                'RunPlugin(%s)' % self.url(
+                    'sourcedownload',
+                    key=key,
+                    id=item.get('id') or '',
+                    src=item.get('url') or '',
+                    title=item.get('title') or '',
+                    year=item.get('year') or 0,
+                    plot=item.get('plot') or '',
+                ),
+            )]
             kodigui.add_link(
                 handle,
                 self.url(
@@ -150,6 +163,7 @@ class Router(object):
                 ),
                 item.get('title') or item.get('id'),
                 item.get('thumb'),
+                context=context,
                 title=item.get('title'),
                 year=item.get('year') or 0,
                 plot=item.get('plot') or '',
@@ -164,6 +178,39 @@ class Router(object):
                 kodigui.tr(30006),
             )
         kodigui.end(handle, content='videos')
+
+    def view_sourcedownload(self):
+        """Kontextmenü-Aktion: NASA- oder Commons-Treffer herunterladen."""
+        key = self.params.get('key') or ''
+        provider = self.providers.by_key(key)
+        url = provider.play_url(self.params) if provider else ''
+        if not url:
+            kodigui.notify(kodigui.tr(30009), icon=xbmcgui.NOTIFICATION_ERROR)
+            return
+        downloads = Downloads()
+        if not downloads.folder:
+            kodigui.notify(kodigui.tr(30039))
+            return
+        title = clean_text(self.params.get('title'), 200) or 'Video'
+        try:
+            year = int(self.params.get('year') or 0)
+        except (TypeError, ValueError):
+            year = 0
+        item = {
+            'title': title,
+            'year': year,
+            'plot': clean_text(self.params.get('plot'), 600),
+            'creator': '',
+            'duration': 0,
+        }
+        suffix = os.path.splitext(urllib.parse.urlparse(url).path)[1].lower()
+        if suffix not in VIDEO_SUFFIXES:
+            suffix = '.mp4'
+        source = {'url': url, 'size': 0, 'format': suffix.lstrip('.').upper()}
+        target = downloads.path_for(item, source)
+        ok, message_id = downloads.save(item, source, target)
+        icon = xbmcgui.NOTIFICATION_INFO if ok else xbmcgui.NOTIFICATION_ERROR
+        kodigui.notify(kodigui.tr(message_id), icon=icon)
 
     def view_sourceplay(self):
         key = self.params.get('key') or ''
