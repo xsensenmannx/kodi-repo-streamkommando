@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.11.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.12.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -10,15 +10,15 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="de_DE">Gemeinfreie Filme aus dem Internet Archive</summary>
         <summary lang="en_GB">Public domain films from the Internet Archive</summary>
-        <description lang="de_DE">Stream Kommando durchsucht und spielt freie Filme und Videos: globale Suche über Internet Archive, NASA und Wikimedia Commons, kuratierte Blender Open Movies, Sammlungen direkt im Hauptmenü, Zufallsfilm, Qualitätsauswahl, Download-Manager mit lokaler Filmbibliothek, Merkliste, Verlauf mit Wiedergabeposition, Untertitelspuren aus den Quellen, Export als .strm/.nfo für die Kodi-Bibliothek, eigene Sammlungen aus Archive-Collections und Commons-Kategorien und ein eigener Ordner mit .strm- und .m3u-Dateien.</description>
-        <description lang="en_GB">Stream Kommando browses and plays free films and videos: global search across the Internet Archive, NASA and Wikimedia Commons, curated Blender Open Movies, collections in the main menu, a random movie, quality selection, a download manager with a local library, a watchlist, resume history, subtitle tracks from the sources, .strm/.nfo export for the Kodi library, custom collections from Archive collections and Commons categories and your own folder of .strm and .m3u files.</description>
+        <description lang="de_DE">Stream Kommando durchsucht und spielt freie Filme und Videos: globale Suche über Internet Archive, NASA und Wikimedia Commons, kuratierte Blender Open Movies, Sammlungen direkt im Hauptmenü, Zufallsfilm, Qualitätsauswahl, Komplettes Filmerlebnis mit Internet Archive, NASA-Themen, Wikimedia-Commons-Themen und Blender Open Movies: globale Suche, Merkliste, Verlauf mit Wiedergabeposition, Untertitelspuren, Download-Manager, Filmbibliothek, Export als .strm/.nfo, eigene Sammlungen und eigene .strm/.m3u-Dateien.</description>
+        <description lang="en_GB">Stream Kommando browses and plays free films and videos: global search across the Internet Archive, NASA and Wikimedia Commons, curated Blender Open Movies, collections in the main menu, a random movie, quality selection, a complete movie experience with Internet Archive, NASA topics, Wikimedia Commons topics and Blender Open Movies: global search, watchlist, resume history, subtitle tracks, download manager, movie library, .strm/.nfo export, custom collections and your own .strm/.m3u files.</description>
         <disclaimer lang="de_DE">Alle Inhalte stammen aus dem Internet Archive und sind dort gemeinfrei oder frei lizenziert. Gesperrte Items werden nicht abgespielt. Es werden keine fremden Portale ausgelesen und keine Bezahlschranken umgegangen.</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.11.0: Eigene Sammlungen über Internet-Archive-IDs und Commons-Kategorien. 1.10.3: Einstellungen beim Export.</news>
+        <news>1.12.0: NASA- und Commons-Themen direkt im Haupt-Add-on – ein Add-on für alles. 1.11.0: Eigene Sammlungen.</news>
     </extension>
 </addon>
 <addon id="plugin.video.streamkommando.commons" name="Stream Kommando: Commons" version="1.0.0" provider-name="Stream Kommando">
@@ -61,7 +61,7 @@
         <news>1.0.0: Erste Version mit Themen und Suche im NASA-Archiv.</news>
     </extension>
 </addon>
-<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.3.0" provider-name="Stream Kommando">
+<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.4.0" provider-name="Stream Kommando">
     <extension point="xbmc.addon.repository" name="Stream Kommando Repository">
         <dir>
             <info compressed="false">https://xsensenmannx.github.io/kodi-repo-streamkommando/addons.xml</info>
@@ -72,14 +72,14 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="de_DE">Kodi-Repository für die Stream-Kommando-Add-ons</summary>
         <summary lang="en_GB">Kodi repository for the Stream Kommando add-ons</summary>
-        <description lang="de_DE">Dieses Repository liefert alle Stream-Kommando-Add-ons und deren Aktualisierungen: Internet Archive, NASA und Wikimedia Commons.</description>
-        <description lang="en_GB">This repository provides all Stream Kommando add-ons and their updates: Internet Archive, NASA and Wikimedia Commons.</description>
+        <description lang="de_DE">Dieses Repository liefert Stream Kommando und Aktualisierungen. Das Haupt-Add-on enthält Internet Archive, NASA, Wikimedia Commons und Blender Open Movies; die separaten NASA- und Commons-Add-ons sind optional.</description>
+        <description lang="en_GB">This repository provides Stream Kommando and its updates. The main add-on includes Internet Archive, NASA, Wikimedia Commons and Blender Open Movies; the separate NASA and Commons add-ons are optional.</description>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.3.0: Kodi-20/21-kompatibles Repository-Schema (dir-Block) – der Katalog wird wieder ausgeliefert.</news>
+        <news>1.4.0: Ein Add-on genügt – das Haupt-Add-on enthält alle Quellen. 1.3.0: Kodi-20/21-Schema.</news>
     </extension>
 </addon>
 </addons>

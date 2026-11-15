@@ -5,9 +5,9 @@ Repository-Add-on:
 
 | Add-on | Inhalt |
 | --- | --- |
-| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, **Blender Open Movies** (7 CC-BY-Filme), 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager für alle Quellen, eigene `.strm`/`.m3u`-Quellen |
-| Stream Kommando: NASA | **images.nasa.gov**: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
-| Stream Kommando: Commons | **Wikimedia Commons**: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
+| Stream Kommando | **Globale Suche** über Internet Archive, NASA und Wikimedia Commons, **NASA-Themen** (Apollo, Artemis, Mars, ISS, Shuttle, Erde, Raketen), **Commons-Themen** (Städte, Natur, Tiere, Wissenschaft, Historisches), **Blender Open Movies** (7 CC-BY-Filme), 8 IA-Sammlungen, Zufallsfilm, Qualitätsauswahl, Download-Manager für alle Quellen, eigene `.strm`/`.m3u`-Quellen |
+| Stream Kommando: NASA (optional) | Eigenständiges **images.nasa.gov**-Add-on: Apollo, Artemis, Mars, ISS, Space Shuttle, Erde aus dem All, Raketenstarts + Suche |
+| Stream Kommando: Commons (optional) | Eigenständiges **Wikimedia Commons**-Add-on: freie Videos (WebM/VP9) mit Lizenz- und Autorangabe + Suche |
 
 ## Aufbau
 
@@ -25,6 +25,13 @@ plugin.video.streamkommando.commons/   Wikimedia-Commons-Add-on
 
 Jedes Add-on ist eigenständig (eigene `resources/lib`, eigene Sprachen), damit es
 auch einzeln per ZIP installierbar bleibt.
+
+**Ein Add-on genügt:** Das Haupt-Add-on enthält Internet Archive, NASA, Wikimedia
+Commons, Blender und die eigenen Sammlungen. Die separaten NASA-/Commons-Add-ons
+sind nur noch für Nutzer gedacht, die diese Quellen als eigenständige Einträge
+möchten. Eine Kodi-Repository-ZIP ist immer nur ein Katalog und kann das Plugin
+nicht mitinstallieren — installiert wird das Haupt-Add-on aus dem Repository oder
+direkt per ZIP.
 
 ## 1. Basis-URL eintragen
 

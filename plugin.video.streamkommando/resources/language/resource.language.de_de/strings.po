@@ -100,6 +100,54 @@ msgctxt "#30060"
 msgid "Removed from history"
 msgstr "Aus dem Verlauf entfernt"
 
+msgctxt "#30120"
+msgid "Apollo"
+msgstr "Apollo"
+
+msgctxt "#30121"
+msgid "Artemis"
+msgstr "Artemis"
+
+msgctxt "#30122"
+msgid "Mars"
+msgstr "Mars"
+
+msgctxt "#30123"
+msgid "ISS"
+msgstr "ISS"
+
+msgctxt "#30124"
+msgid "Space Shuttle"
+msgstr "Space Shuttle"
+
+msgctxt "#30125"
+msgid "Earth from space"
+msgstr "Erde aus dem All"
+
+msgctxt "#30126"
+msgid "Rocket launches"
+msgstr "Raketenstarts"
+
+msgctxt "#30127"
+msgid "Cities"
+msgstr "Städte"
+
+msgctxt "#30128"
+msgid "Nature"
+msgstr "Natur"
+
+msgctxt "#30129"
+msgid "Animals"
+msgstr "Tiere"
+
+msgctxt "#30130"
+msgid "Science"
+msgstr "Wissenschaft"
+
+msgctxt "#30131"
+msgid "Historic films"
+msgstr "Historische Filme"
+
 msgctxt "#30068"
 msgid "Custom collections"
 msgstr "Eigene Sammlungen"

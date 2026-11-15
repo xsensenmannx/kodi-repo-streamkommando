@@ -24,6 +24,25 @@ COMMONS_FILE = 'https://commons.wikimedia.org/wiki/Special:FilePath/'
 
 NASA_SIZES = ('~orig.mp4', '~large.mp4', '~medium.mp4', '~small.mp4', '~mobile.mp4', '~preview.mp4')
 
+# (String-ID, Suchbegriff) – kuratierte Einstiege für die Themenmenüs.
+NASA_TOPICS = (
+    (30120, 'apollo'),
+    (30121, 'artemis'),
+    (30122, 'mars rover'),
+    (30123, 'international space station'),
+    (30124, 'space shuttle'),
+    (30125, 'earth from space'),
+    (30126, 'rocket launch'),
+)
+
+COMMONS_TOPICS = (
+    (30127, 'stadt'),
+    (30128, 'natur'),
+    (30129, 'tiere'),
+    (30130, 'wissenschaft'),
+    (30131, 'historischer film'),
+)
+
 # Kuratierte Open Movies der Blender Foundation (CC-BY), Fassungen auf Wikimedia Commons.
 BLENDER_FILMS = (
     ('Big Buck Bunny', 2008,

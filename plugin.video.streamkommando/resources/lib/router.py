@@ -27,7 +27,7 @@ from .downloads import VIDEO_SUFFIXES, Downloads
 from .feeds import Feeds, normalize_commons, normalize_ia
 from .history import History, format_position
 from .library import LibraryExport
-from .providers import Providers
+from .providers import COMMONS_TOPICS, NASA_TOPICS, Providers
 from .streams import Streams
 from .watchlist import Watchlist
 
@@ -97,6 +97,8 @@ class Router(object):
         for string_id, collection_id in COLLECTIONS:
             kodigui.add_folder(handle, self.url('collection', id=collection_id, page=1), kodigui.tr(string_id))
         kodigui.add_folder(handle, self.url('source', key='blender', page=1), kodigui.tr(30044), plot=kodigui.tr(30045))
+        kodigui.add_folder(handle, self.url('topics', kind='nasa'), kodigui.tr(30111))
+        kodigui.add_folder(handle, self.url('topics', kind='commons'), kodigui.tr(30112))
         kodigui.add_folder(handle, self.url('feeds'), kodigui.tr(30068), plot=kodigui.tr(30072))
         kodigui.add_folder(handle, self.url('watchlist'), kodigui.tr(30050), plot=kodigui.tr(30051))
         kodigui.add_folder(handle, self.url('history'), kodigui.tr(30054), plot=kodigui.tr(30058))
@@ -121,6 +123,56 @@ class Router(object):
         collection_id = self.params.get('id') or ''
         docs, total = self.archive.collection(collection_id, self.page(), self.rows(), self.sort())
         self.list_movies(docs, total, 'collection', id=collection_id)
+
+    # -- NASA- und Commons-Themen -----------------------------------
+    def view_topics(self):
+        """Themenmenü und Suche für NASA bzw. Wikimedia Commons."""
+        kind = self.params.get('kind') or ''
+        provider = self.providers.by_key(kind)
+        topics = {'nasa': NASA_TOPICS, 'commons': COMMONS_TOPICS}.get(kind)
+        if provider is None or not topics:
+            kodigui.notify(kodigui.tr(30007), icon=xbmcgui.NOTIFICATION_ERROR)
+            kodigui.end(self.handle, succeeded=False, cache=False)
+            return
+
+        handle = self.handle
+        term = (self.params.get('q') or '').strip()
+        raw_id = self.params.get('id')
+        if raw_id is not None:
+            try:
+                index = int(raw_id)
+            except (TypeError, ValueError):
+                index = 0
+            index = min(max(index, 0), len(topics) - 1)
+            term = topics[index][1]
+        elif self.params.get('ask') == '1' and not term:
+            term = (xbmcgui.Dialog().input(kodigui.tr(30008), type=xbmcgui.INPUT_ALPHANUM) or '').strip()
+            if not term:
+                kodigui.end(handle, succeeded=False, cache=False)
+                return
+
+        if term:
+            items, total, more = provider.search(term, self.page(), SOURCE_LIMIT, self.sort())
+            if provider.error and not items:
+                kodigui.notify(kodigui.tr(30046), icon=xbmcgui.NOTIFICATION_ERROR)
+                kodigui.end(handle, succeeded=False, cache=False)
+                return
+            self.add_source_items(items, kind)
+            if not items:
+                kodigui.notify(kodigui.tr(30007))
+            if more or total > self.page() * SOURCE_LIMIT:
+                kodigui.add_folder(
+                    handle,
+                    self.url('topics', kind=kind, q=term, page=self.page() + 1),
+                    kodigui.tr(30006),
+                )
+            kodigui.end(handle, content='videos')
+            return
+
+        kodigui.add_folder(handle, self.url('topics', kind=kind, ask=1), kodigui.tr(30002))
+        for index, (label_id, _query) in enumerate(topics):
+            kodigui.add_folder(handle, self.url('topics', kind=kind, id=index), kodigui.tr(label_id))
+        kodigui.end(handle, content='files', cache=False)
 
     # -- Eigene Sammlungen -----------------------------------------
     def view_feeds(self):
