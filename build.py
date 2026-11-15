@@ -59,6 +59,18 @@ def addon_info(text, source):
     return info
 
 
+def validate_repository_xml(addon_xml, source):
+    """Kodi 20+ liest nur noch <dir>-Blöcke im Repository-Extension-Point."""
+    root = ElementTree.fromstring(addon_xml)
+    if not (root.get('id') or '').startswith('repository.'):
+        return
+    extensions = [e for e in root.findall('extension') if e.get('point') == 'xbmc.addon.repository']
+    if not extensions:
+        raise SystemExit('%s: xbmc.addon.repository-Extension fehlt' % source)
+    if extensions[0].find('dir') is None:
+        raise SystemExit('%s: xbmc.addon.repository braucht ein <dir>-Element (Kodi 20+)' % source)
+
+
 def addon_metadata(addon_xml):
     """Name und deutsche Zusammenfassung für die Landingpage."""
     root = ElementTree.fromstring(addon_xml)
@@ -196,6 +208,7 @@ def main():
     for addon_dir in addons:
         addon_xml = render_addon_xml(addon_dir, config)
         info = addon_info(addon_xml, addon_dir)
+        validate_repository_xml(addon_xml, addon_dir)
         zip_path = build_zip(addon_dir, info, addon_xml, zip_dir)
         entries.append(addon_xml)
         name, summary = addon_metadata(addon_xml)
