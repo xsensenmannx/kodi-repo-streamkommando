@@ -1,0 +1,137 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.streamkommando 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-15 12:00+0000\n"
+"PO-Revision-Date: 2026-11-15 12:00+0000\n"
+"Last-Translator: Stream Kommando\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30001"
+msgid "Film Archive"
+msgstr "Filmarchiv"
+
+msgctxt "#30002"
+msgid "Search"
+msgstr "Suche"
+
+msgctxt "#30003"
+msgid "My Streams"
+msgstr "Eigene Streams"
+
+msgctxt "#30004"
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgctxt "#30005"
+msgid "Random Movie"
+msgstr "Zufallsfilm"
+
+msgctxt "#30006"
+msgid "Next Page"
+msgstr "Nächste Seite"
+
+msgctxt "#30007"
+msgid "No results found"
+msgstr "Keine Treffer gefunden"
+
+msgctxt "#30008"
+msgid "Enter a search term"
+msgstr "Suchbegriff eingeben"
+
+msgctxt "#30009"
+msgid "Could not find a playable file"
+msgstr "Keine abspielbare Datei gefunden"
+
+msgctxt "#30010"
+msgid "Clear Cache"
+msgstr "Cache leeren"
+
+msgctxt "#30011"
+msgid "Cache cleared"
+msgstr "Cache geleert"
+
+msgctxt "#30012"
+msgid "Set a folder with .strm or .m3u files in the settings"
+msgstr "Lege in den Einstellungen einen Ordner mit .strm- oder .m3u-Dateien fest"
+
+msgctxt "#30013"
+msgid "Open Settings"
+msgstr "Einstellungen öffnen"
+
+msgctxt "#30014"
+msgid "Public domain films from the Internet Archive"
+msgstr "Gemeinfreie Filme aus dem Internet Archive"
+
+msgctxt "#30015"
+msgid "Random film from the archive"
+msgstr "Zufälliger Film aus dem Archiv"
+
+msgctxt "#30016"
+msgid "Items per page"
+msgstr "Einträge pro Seite"
+
+msgctxt "#30017"
+msgid "Sort order"
+msgstr "Sortierung"
+
+msgctxt "#30018"
+msgid "Most downloaded"
+msgstr "Meistgeladen"
+
+msgctxt "#30019"
+msgid "Title A-Z"
+msgstr "Titel A-Z"
+
+msgctxt "#30020"
+msgid "Newest first"
+msgstr "Neueste zuerst"
+
+msgctxt "#30021"
+msgid "Cache duration (hours)"
+msgstr "Cache-Dauer (Stunden)"
+
+msgctxt "#30022"
+msgid "Folder with my streams"
+msgstr "Ordner mit eigenen Streams"
+
+msgctxt "#30023"
+msgid "Film Archive"
+msgstr "Filmarchiv"
+
+msgctxt "#30101"
+msgid "Sci-Fi & Horror"
+msgstr "Sci-Fi & Horror"
+
+msgctxt "#30102"
+msgid "Comedy"
+msgstr "Komödie"
+
+msgctxt "#30103"
+msgid "Silent Film"
+msgstr "Stummfilm"
+
+msgctxt "#30104"
+msgid "Animation"
+msgstr "Animation"
+
+msgctxt "#30105"
+msgid "Classic TV"
+msgstr "Klassisches Fernsehen"
+
+msgctxt "#30106"
+msgid "Prelinger Archive"
+msgstr "Prelinger-Archiv"
+
+msgctxt "#30107"
+msgid "Short Films"
+msgstr "Kurzfilme"
+
+msgctxt "#30108"
+msgid "Feature Films"
+msgstr "Spielfilme"

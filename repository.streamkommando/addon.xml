@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.0.0" provider-name="Stream Kommando">
+    <extension point="xbmc.addon.repository" name="Stream Kommando Repository">
+        <info>{{BASE_URL}}/addons.xml</info>
+        <checksum>{{BASE_URL}}/addons.xml.md5</checksum>
+        <datadir zip="true">{{BASE_URL}}/zips</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">Kodi-Repository für Stream Kommando</summary>
+        <summary lang="en_GB">Kodi repository for Stream Kommando</summary>
+        <description lang="de_DE">Dieses Repository liefert das Add-on Stream Kommando und dessen Aktualisierungen.</description>
+        <description lang="en_GB">This repository provides the Stream Kommando add-on and its updates.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
