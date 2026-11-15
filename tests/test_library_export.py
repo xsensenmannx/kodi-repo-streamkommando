@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Tests für den Bibliotheksexport (ohne Kodi-Installation lauffähig)."""
 
+import json
 import os
 import shutil
 import sys
@@ -116,6 +117,16 @@ class LibraryExportTest(unittest.TestCase):
             'plot': 'Plot',
             'duration': 120,
         }
+        self.second_video = os.path.join(self.root, 'Quelle', 'Zweiter.mp4')
+        with open(self.second_video, 'wb') as handle:
+            handle.write(b'video2')
+        self.second_download = {
+            'path': self.second_video,
+            'title': 'Zweiter',
+            'year': 2021,
+            'plot': 'Plot 2',
+            'duration': 90,
+        }
 
     def tearDown(self):
         shutil.rmtree(self.root, ignore_errors=True)
@@ -151,6 +162,75 @@ class LibraryExportTest(unittest.TestCase):
 
         files = sorted(os.listdir(os.path.join(library, 'Downloads')))
         self.assertEqual(files, ['Film (2020).nfo', 'Film (2020).strm'])
+
+
+    def test_stale_exports_removed_on_next_export(self):
+        library = os.path.join(self.root, 'Bibliothek')
+        self.assertEqual(export_entries(library, [], [self.download, self.second_download]), 2)
+
+        downloads = os.path.join(library, 'Downloads')
+        self.assertTrue(os.path.isfile(os.path.join(downloads, 'Zweiter (2021).strm')))
+
+        self.assertEqual(export_entries(library, [], [self.download]), 1)
+
+        self.assertTrue(os.path.isfile(os.path.join(downloads, 'Film (2020).strm')))
+        self.assertTrue(os.path.isfile(os.path.join(downloads, 'Film (2020).nfo')))
+        self.assertFalse(os.path.exists(os.path.join(downloads, 'Zweiter (2021).strm')))
+        self.assertFalse(os.path.exists(os.path.join(downloads, 'Zweiter (2021).nfo')))
+        with open(os.path.join(library, 'streamkommando-export.json'), encoding='utf-8') as handle:
+            manifest = json.load(handle)
+        self.assertEqual(sorted(manifest['files']),
+                         ['Downloads/Film (2020).nfo', 'Downloads/Film (2020).strm'])
+
+    def test_empty_export_removes_all_previous_exports(self):
+        library = os.path.join(self.root, 'Bibliothek')
+        export_entries(library, [], [self.download])
+
+        self.assertEqual(export_entries(library, [], []), 0)
+
+        downloads = os.path.join(library, 'Downloads')
+        self.assertEqual(os.listdir(downloads), [])
+
+    def test_cleanup_leaves_files_without_manifest(self):
+        library = os.path.join(self.root, 'Bibliothek')
+        downloads = os.path.join(library, 'Downloads')
+        os.makedirs(downloads)
+        manual = os.path.join(downloads, 'Manuell.strm')
+        with open(manual, 'w', encoding='utf-8') as handle:
+            handle.write('plugin://manuell\n')
+
+        export_entries(library, [], [])
+
+        self.assertTrue(os.path.isfile(manual))
+
+    def test_manifest_with_outside_paths_is_ignored(self):
+        library = os.path.join(self.root, 'Bibliothek')
+        os.makedirs(os.path.join(library, 'Merkliste'))
+        outside = os.path.join(self.root, 'aussen.strm')
+        with open(outside, 'w', encoding='utf-8') as handle:
+            handle.write('plugin://aussen\n')
+        with open(os.path.join(library, 'streamkommando-export.json'), 'w', encoding='utf-8') as handle:
+            json.dump({'version': 1, 'files': [
+                '../aussen.strm', outside, 'Merkliste/../../aussen.strm', 'Merkliste/ok.txt',
+            ]}, handle)
+
+        export_entries(library, [], [])
+
+        self.assertTrue(os.path.isfile(outside))
+
+    def test_corrupt_manifest_is_ignored(self):
+        library = os.path.join(self.root, 'Bibliothek')
+        downloads = os.path.join(library, 'Downloads')
+        os.makedirs(downloads)
+        keep = os.path.join(downloads, 'Bleibt.strm')
+        with open(keep, 'w', encoding='utf-8') as handle:
+            handle.write('plugin://bleibt\n')
+        with open(os.path.join(library, 'streamkommando-export.json'), 'w', encoding='utf-8') as handle:
+            handle.write('{kaputt')
+
+        export_entries(library, [], [])
+
+        self.assertTrue(os.path.isfile(keep))
 
 
 if __name__ == '__main__':
