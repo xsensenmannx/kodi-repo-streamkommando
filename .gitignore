@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+.freebuff/
 .DS_Store
 Thumbs.db
 desktop.ini

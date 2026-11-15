@@ -12,7 +12,7 @@
                     </constraints>
                     <control type="spinner" format="integer"/>
                 </setting>
-                <setting id="sort_order" type="enum" label="30017" default="0">
+                <setting id="sort_order" type="integer" label="30017" default="0">
                     <level>0</level>
                     <constraints>
                         <options>
@@ -23,8 +23,22 @@
                     </constraints>
                     <control type="spinner" format="string"/>
                 </setting>
-                <setting id="cache_hours" type="integer" label="30021" default="12">
+                <setting id="quality_mode" type="integer" label="30024" default="0">
                     <level>0</level>
+                    <constraints>
+                        <options>
+                            <option label="30025">0</option>
+                            <option label="30026">1</option>
+                        </options>
+                    </constraints>
+                    <control type="spinner" format="string"/>
+                </setting>
+                <setting id="only_licensed" type="boolean" label="30027" default="false">
+                    <level>1</level>
+                    <control type="toggle"/>
+                </setting>
+                <setting id="cache_hours" type="integer" label="30021" default="12">
+                    <level>1</level>
                     <constraints>
                         <minimum>1</minimum>
                         <maximum>168</maximum>

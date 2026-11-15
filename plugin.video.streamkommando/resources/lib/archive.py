@@ -16,7 +16,7 @@ SEARCH_URL = 'https://archive.org/advancedsearch.php'
 META_URL = 'https://archive.org/metadata/'
 IMG_URL = 'https://archive.org/services/img/'
 FILE_URL = 'https://archive.org/download/'
-USER_AGENT = 'StreamKommando/1.0 (Kodi Add-on)'
+USER_AGENT = 'StreamKommando/1.1 (Kodi Add-on; +https://github.com/xsensenmannx/kodi-repo-streamkommando)'
 
 FIELDS = ('identifier', 'title', 'year', 'description', 'downloads', 'runtime', 'creator')
 
@@ -47,6 +47,18 @@ VIDEO_FORMATS = (
     ('quicktime', 1),
 )
 VIDEO_SUFFIXES = ('.mp4', '.m4v', '.mkv', '.webm', '.ogv', '.mpg', '.mpeg', '.avi', '.mov')
+
+MIME_TYPES = {
+    '.mp4': 'video/mp4',
+    '.m4v': 'video/mp4',
+    '.webm': 'video/webm',
+    '.ogv': 'video/ogg',
+    '.mkv': 'video/x-matroska',
+    '.mpg': 'video/mpeg',
+    '.mpeg': 'video/mpeg',
+    '.avi': 'video/x-msvideo',
+    '.mov': 'video/quicktime',
+}
 
 
 def clean_text(value, limit=1200):
@@ -90,6 +102,41 @@ def to_seconds(value):
     return 0
 
 
+def format_size(size):
+    try:
+        size = float(size or 0)
+    except (TypeError, ValueError):
+        return ''
+    if size <= 0:
+        return ''
+    for unit in ('B', 'KB', 'MB', 'GB'):
+        if size < 1024:
+            return ('%d %s' % (size, unit)) if unit == 'B' else ('%.1f %s' % (size, unit))
+        size /= 1024.0
+    return '%.1f TB' % size
+
+
+def source_label(source):
+    """Kurzlabel für den Qualitätsdialog: 1080p · MPEG4 · 843 MB."""
+    parts = []
+    if source.get('height'):
+        parts.append('%dp' % source['height'])
+    if source.get('format'):
+        parts.append(str(source['format']))
+    size = format_size(source.get('size'))
+    if size:
+        parts.append(size)
+    return ' · '.join(parts) or str(source.get('name') or '')
+
+
+def mime_type(url):
+    clean = str(url or '').split('|', 1)[0].lower()
+    for suffix, value in MIME_TYPES.items():
+        if clean.endswith(suffix):
+            return value
+    return ''
+
+
 def _open_json(url, timeout=20):
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
     try:
@@ -101,8 +148,10 @@ def _open_json(url, timeout=20):
 
 
 class Archive(object):
-    def __init__(self, cache=None):
+    def __init__(self, cache=None, only_licensed=False):
         self.cache = cache if cache is not None else Cache()
+        self.only_licensed = bool(only_licensed)
+        self.license_clause = ' AND licenseurl:*' if self.only_licensed else ''
 
     # -- Suche ------------------------------------------------------
     def search(self, query, page=1, rows=50, sort='downloads desc'):
@@ -120,13 +169,15 @@ class Archive(object):
         return ' OR '.join('collection:%s' % collection_id for _, collection_id in COLLECTIONS)
 
     def collection(self, collection_id, page=1, rows=50, sort='downloads desc'):
-        return self.search('collection:%s AND mediatype:movies' % collection_id, page, rows, sort)
+        query = 'collection:%s AND mediatype:movies%s' % (collection_id, self.license_clause)
+        return self.search(query, page, rows, sort)
 
     def find(self, term, page=1, rows=50, sort='downloads desc'):
         term = re.sub(r'[\\:()\[\]{}"^~+]', ' ', term or '').strip()
         if not term:
             return [], 0
-        query = 'mediatype:movies AND (%s) AND title:(%s)' % (self._collections_query(), term)
+        query = 'mediatype:movies AND (%s) AND title:(%s)%s' % (
+            self._collections_query(), term, self.license_clause)
         return self.search(query, page, rows, sort)
 
     def random_movie(self, rows=50):
@@ -158,6 +209,8 @@ class Archive(object):
 
     def _digest(self, identifier, payload):
         meta = payload.get('metadata') or {}
+        restricted = bool(payload.get('is_dark'))
+        sources = [] if restricted else self._sources(identifier, payload.get('files') or [])
         return {
             'identifier': identifier,
             'title': clean_text(meta.get('title'), 200) or identifier,
@@ -165,11 +218,14 @@ class Archive(object):
             'plot': clean_text(meta.get('description')),
             'creator': clean_text(meta.get('creator'), 200),
             'duration': to_seconds(meta.get('runtime')),
-            'url': self._playback_url(identifier, payload.get('files') or []),
+            'restricted': restricted,
+            'sources': sources,
+            'url': sources[0]['url'] if sources else '',
         }
 
     @staticmethod
-    def _playback_url(identifier, files):
+    def _sources(identifier, files):
+        """Alle abspielbaren Dateien, beste Qualität zuerst."""
         ranked = []
         for entry in files:
             name = str(entry.get('name') or '')
@@ -178,20 +234,26 @@ class Archive(object):
                 continue
             if lower.startswith('__ia_thumb') or 'thumb' in lower:
                 continue
-            fmt = str(entry.get('format') or '').lower()
+            fmt = str(entry.get('format') or '')
             rank = 0
             for label, weight in VIDEO_FORMATS:
-                if label in fmt:
+                if label in fmt.lower():
                     rank = weight
                     break
             if rank == 0:
                 rank = 1 if lower.endswith(('.mp4', '.m4v', '.mkv', '.webm')) else 0
             try:
                 size = int(entry.get('size') or 0)
+                height = int(entry.get('height') or 0)
             except (TypeError, ValueError):
-                size = 0
-            ranked.append((rank, size, name))
-        if not ranked:
-            return ''
-        ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
-        return FILE_URL + urllib.parse.quote(identifier) + '/' + urllib.parse.quote(ranked[0][2])
+                size, height = 0, 0
+            ranked.append({
+                'url': FILE_URL + urllib.parse.quote(identifier) + '/' + urllib.parse.quote(name),
+                'name': name,
+                'format': fmt,
+                'height': height,
+                'size': size,
+                'rank': rank,
+            })
+        ranked.sort(key=lambda row: (row['height'], row['rank'], row['size']), reverse=True)
+        return ranked

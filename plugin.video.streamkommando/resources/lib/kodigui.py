@@ -29,11 +29,52 @@ def art(image=None):
     return data
 
 
+def apply_info(item, info):
+    """Setzt InfoLabels über InfoTagVideo (Kodi 20+) mit Fallback auf setInfo."""
+    tag = getattr(item, 'getVideoInfoTag', None)
+    if tag is None:
+        item.setInfo('video', info)
+        return
+    vtag = item.getVideoInfoTag()
+    values = (
+        ('setTitle', info.get('title')),
+        ('setPlot', info.get('plot')),
+        ('setYear', info.get('year') or None),
+        ('setMediaType', info.get('mediatype')),
+        ('setDuration', info.get('duration') or None),
+        ('setStudios', [info['studio']] if info.get('studio') else None),
+    )
+    applied = 0
+    for name, value in values:
+        if value in (None, ''):
+            continue
+        setter = getattr(vtag, name, None)
+        if not callable(setter):
+            continue
+        try:
+            setter(value)
+            applied += 1
+        except Exception:
+            pass
+    if applied == 0:
+        item.setInfo('video', info)
+
+
+def allow_content_lookup(item):
+    """Verhindert HEAD-Abfragen beim Öffnen der Liste (schneller, kein Timeout)."""
+    setter = getattr(item, 'setContentLookup', None)
+    if callable(setter):
+        try:
+            setter(False)
+        except Exception:
+            pass
+
+
 def add_folder(handle, url, label, image=None, plot='', folder=True):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art(image))
     if plot:
-        item.setInfo('video', {'plot': plot})
+        apply_info(item, {'plot': plot, 'mediatype': 'video'})
     xbmcplugin.addDirectoryItem(handle, url, item, folder)
 
 
@@ -41,15 +82,16 @@ def add_link(handle, url, label, image=None, **info):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art(image))
     if info:
-        item.setInfo('video', info)
+        apply_info(item, info)
     item.setProperty('IsPlayable', 'true')
+    allow_content_lookup(item)
     xbmcplugin.addDirectoryItem(handle, url, item, False)
 
 
 def add_file(handle, path, label):
     item = xbmcgui.ListItem(label=label, offscreen=True)
     item.setArt(art())
-    item.setInfo('video', {'title': label})
+    apply_info(item, {'title': label, 'mediatype': 'movie'})
     item.setPath(path)
     xbmcplugin.addDirectoryItem(handle, path, item, False)
 

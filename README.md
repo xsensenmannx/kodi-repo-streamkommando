@@ -27,32 +27,40 @@ Projekt bereits gesetzt:
 
 ```json
 {
-  "base_url": "https://raw.githubusercontent.com/xsensenmannx/kodi-repo-streamkommando/main"
+  "base_url": "https://xsensenmannx.github.io/kodi-repo-streamkommando"
 }
 ```
 
-Bei einem Fork oder anderem Branch hier anpassen und neu bauen – `build.py` ersetzt
-`{{BASE_URL}}` in der `addon.xml` des Repository-Add-ons und schreibt alle Dateien neu:
+Bei einem Fork oder anderer Domain hier anpassen und neu bauen – `build.py` ersetzt
+`{{BASE_URL}}` in der `addon.xml` des Repository-Add-ons, in der Landingpage und
+schreibt alle Dateien neu:
 
 ```
 python build.py
 ```
 
-## 2. Hosten
+## 2. Hosten (GitHub Pages)
 
 Alles, was Kodi braucht, liegt danach im Projektordner:
 
 ```
-addons.xml
-addons.xml.md5
-zips/repository.streamkommando/repository.streamkommando-1.0.0.zip
-zips/plugin.video.streamkommando/plugin.video.streamkommando-1.0.0.zip
+index.html                                       Landingpage + klickbare ZIP-Links
+addons.xml / addons.xml.md5                      Addon-Index + Änderungs-Token
+zips/repository.streamkommando/…-1.1.0.zip
+zips/plugin.video.streamkommando/…-1.1.0.zip
 ```
 
-Diese Pfade müssen unter der `base_url` genau so erreichbar sein. Geeignet sind
-GitHub Pages, `raw.githubusercontent.com` (Branch `main`) oder jeder statische
-Webspace. Nach jeder Änderung an einem Add-on: Version in der `addon.xml`
-erhöhen und `python build.py` erneut ausführen.
+Für Kodi ist **GitHub Pages** der richtige Host: `raw.githubusercontent.com` liefert
+keine Verzeichnisliste, dort kann man im Kodi-Dateimanager keine ZIP-Datei anklicken.
+Einmalig einschalten unter **Settings → Pages → Deploy from a branch → `main` → `/ (root)`**.
+Die Seite liegt danach unter der `base_url`; `index.html` verlinkt beide ZIPs relativ,
+damit Kodi sie im Dateimanager anzeigt.
+
+Nach jeder Änderung an einem Add-on: Version in der `addon.xml` erhöhen und
+`python build.py` erneut ausführen, dann committen und pushen.
+
+Hinweis: Pages cacht ca. 10 Minuten. Wenn Kodi ein Update nicht sofort sieht, ist das
+der Grund – nicht ein fehlerhafter Build.
 
 ## 3. In Kodi installieren
 
@@ -76,8 +84,12 @@ Add-on auch direkt testen: `zips/plugin.video.streamkommando/…zip` per
 | Eigene Streams | Ordner aus den Einstellungen (eine Ebene Unterordner), spielt `.strm`, `.m3u`, `.m3u8`, `.mp4`, `.mkv` usw. |
 | Cache leeren | verwirft zwischengespeicherte Archive-Antworten |
 
-Einstellungen: Einträge pro Seite, Sortierung, Cache-Dauer in Stunden und der
-Ordner für eigene Streams.
+Einstellungen: Einträge pro Seite, Sortierung, **Wiedergabequalität** (immer beste
+Qualität oder bei mehreren Dateien fragen), optionaler **Lizenzfilter** (nur Items mit
+`licenseurl`), Cache-Dauer und der Ordner für eigene Streams.
+
+Abspielbare Dateien listen Auflösung, Format und Größe; gesperrte Archive-Items
+(`is_dark`) werden nicht wiedergegeben.
 
 ## Rechtliches
 

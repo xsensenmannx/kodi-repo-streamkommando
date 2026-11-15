@@ -95,6 +95,29 @@ def write_addons_xml(entries, target):
     return content.encode('utf-8')
 
 
+def write_landing_page(config, built, target):
+    """Rendert web/index.html.tpl mit Versionen, Zip-Pfaden und Basis-URL."""
+    template = os.path.join(ROOT, 'web', 'index.html.tpl')
+    if not os.path.isfile(template):
+        return None
+    with open(template, encoding='utf-8') as handle:
+        html = handle.read()
+    repo_addon = built.get('repository.streamkommando') or {}
+    video_addon = built.get('plugin.video.streamkommando') or {}
+    tokens = {
+        '{{BASE_URL}}': config['base_url'],
+        '{{REPO_VERSION}}': repo_addon.get('version', ''),
+        '{{REPO_ZIP}}': repo_addon.get('zip', ''),
+        '{{ADDON_VERSION}}': video_addon.get('version', ''),
+        '{{ADDON_ZIP}}': video_addon.get('zip', ''),
+    }
+    for token, value in tokens.items():
+        html = html.replace(token, value)
+    with open(target, 'w', encoding='utf-8', newline='\n') as handle:
+        handle.write(html)
+    return target
+
+
 def main():
     config = load_config()
     zip_dir = os.path.join(ROOT, config['zip_dir'])
@@ -104,11 +127,16 @@ def main():
 
     print('Repository: %s' % config['base_url'])
     entries = []
+    built = {}
     for addon_dir in addons:
         addon_xml = render_addon_xml(addon_dir, config)
         info = addon_info(addon_xml, addon_dir)
         zip_path = build_zip(addon_dir, info, addon_xml, zip_dir)
         entries.append(addon_xml)
+        built[info['id']] = {
+            'version': info['version'],
+            'zip': os.path.relpath(zip_path, ROOT).replace(os.sep, '/'),
+        }
         print('  %-32s %-8s %s' % (info['id'], info['version'], os.path.relpath(zip_path, ROOT)))
 
     data = write_addons_xml(entries, os.path.join(ROOT, 'addons.xml'))
@@ -116,6 +144,9 @@ def main():
     with open(os.path.join(ROOT, 'addons.xml.md5'), 'w', encoding='utf-8', newline='\n') as handle:
         handle.write(digest)
     print('addons.xml + addons.xml.md5 (%s)' % digest)
+    landing = write_landing_page(config, built, os.path.join(ROOT, 'index.html'))
+    if landing:
+        print('index.html geschrieben')
 
 
 if __name__ == '__main__':

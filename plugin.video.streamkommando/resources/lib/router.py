@@ -9,7 +9,16 @@ import xbmcgui
 import xbmcplugin
 
 from . import kodigui
-from .archive import COLLECTIONS, IMG_URL, SORTS, Archive, clean_text, to_year
+from .archive import (
+    COLLECTIONS,
+    IMG_URL,
+    SORTS,
+    Archive,
+    clean_text,
+    mime_type,
+    source_label,
+    to_year,
+)
 from .cache import Cache
 from .streams import Streams
 
@@ -23,7 +32,7 @@ class Router(object):
         self.params = dict(urllib.parse.parse_qsl(raw))
         self.mode = self.params.get('mode') or 'root'
         self.cache = Cache()
-        self.archive = Archive(self.cache)
+        self.archive = Archive(self.cache, only_licensed=self.bool_setting('only_licensed'))
         self.settings_url = '%s?mode=settings' % self.base
 
     # -- Helfer -----------------------------------------------------
@@ -31,17 +40,23 @@ class Router(object):
         params['mode'] = mode
         return '%s?%s' % (self.base, urllib.parse.urlencode(params))
 
-    def _int_setting(self, key, default):
+    def int_setting(self, key, default):
         try:
             return int(self.addon.getSetting(key) or default)
         except (TypeError, ValueError):
             return default
 
+    def bool_setting(self, key, default=False):
+        value = (self.addon.getSetting(key) or '').lower()
+        if not value:
+            return default
+        return value in ('true', '1', 'yes', 'on')
+
     def rows(self):
-        return min(200, max(10, self._int_setting('items_per_page', 50)))
+        return min(200, max(10, self.int_setting('items_per_page', 50)))
 
     def sort(self):
-        index = self._int_setting('sort_order', 0)
+        index = self.int_setting('sort_order', 0)
         return SORTS[index] if 0 <= index < len(SORTS) else SORTS[0]
 
     def page(self):
@@ -49,6 +64,10 @@ class Router(object):
             return max(1, int(self.params.get('page') or 1))
         except (TypeError, ValueError):
             return 1
+
+    def fail_playback(self):
+        kodigui.notify(kodigui.tr(30009), icon=xbmcgui.NOTIFICATION_ERROR)
+        xbmcplugin.setResolvedUrl(self.handle, False, xbmcgui.ListItem(offscreen=True))
 
     # -- Ansichten --------------------------------------------------
     def run(self):
@@ -125,12 +144,22 @@ class Router(object):
     def view_play(self):
         identifier = self.params.get('id') or ''
         item = self.archive.item(identifier) if identifier else None
-        if not item or not item.get('url'):
-            kodigui.notify(kodigui.tr(30009), icon=xbmcgui.NOTIFICATION_ERROR)
-            xbmcplugin.setResolvedUrl(self.handle, False, xbmcgui.ListItem(offscreen=True))
+        sources = (item or {}).get('sources') or []
+        if not item or not sources:
+            self.fail_playback()
             return
+
+        chosen = sources[0]
+        if len(sources) > 1 and self.int_setting('quality_mode', 0) == 1:
+            labels = [source_label(source) for source in sources]
+            index = xbmcgui.Dialog().select(kodigui.tr(30030), labels)
+            if index < 0:
+                self.fail_playback()
+                return
+            chosen = sources[index]
+
         play_item = xbmcgui.ListItem(label=item['title'], offscreen=True)
-        play_item.setPath(item['url'])
+        play_item.setPath(chosen['url'])
         play_item.setArt(kodigui.art(IMG_URL + urllib.parse.quote(identifier)))
         info = {
             'title': item['title'],
@@ -142,7 +171,11 @@ class Router(object):
             info['studio'] = item['creator']
         if item.get('duration'):
             info['duration'] = item['duration']
-        play_item.setInfo('video', info)
+        kodigui.apply_info(play_item, info)
+        kodigui.allow_content_lookup(play_item)
+        mimetype = mime_type(chosen['url'])
+        if mimetype and hasattr(play_item, 'setMimeType'):
+            play_item.setMimeType(mimetype)
         xbmcplugin.setResolvedUrl(self.handle, True, play_item)
 
     def view_random(self):

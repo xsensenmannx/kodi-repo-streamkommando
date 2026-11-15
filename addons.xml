@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.0.0" provider-name="Stream Kommando">
+<addon id="plugin.video.streamkommando" name="Stream Kommando" version="1.1.0" provider-name="Stream Kommando">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
     </requires>
@@ -10,22 +10,22 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="de_DE">Gemeinfreie Filme aus dem Internet Archive</summary>
         <summary lang="en_GB">Public domain films from the Internet Archive</summary>
-        <description lang="de_DE">Stream Kommando durchsucht und spielt gemeinfreie Filme aus dem Internet Archive: kuratierte Sammlungen, Volltextsuche im Titel, Zufallsfilm und ein eigener Ordner mit .strm- und .m3u-Dateien.</description>
-        <description lang="en_GB">Stream Kommando browses and plays public domain films from the Internet Archive: curated collections, title search, a random movie and your own folder of .strm and .m3u files.</description>
-        <disclaimer lang="de_DE">Alle Inhalte stammen aus dem Internet Archive und sind dort gemeinfrei oder frei lizenziert. Es werden keine fremden Portale ausgelesen und keine Bezahlschranken umgangen.</disclaimer>
+        <description lang="de_DE">Stream Kommando durchsucht und spielt gemeinfreie Filme aus dem Internet Archive: kuratierte Sammlungen, Titelsuche im Titel, Zufallsfilm, Qualitätsauswahl und ein eigener Ordner mit .strm- und .m3u-Dateien.</description>
+        <description lang="en_GB">Stream Kommando browses and plays public domain films from the Internet Archive: curated collections, title search, a random movie, quality selection and your own folder of .strm and .m3u files.</description>
+        <disclaimer lang="de_DE">Alle Inhalte stammen aus dem Internet Archive und sind dort gemeinfrei oder frei lizenziert. Gesperrte Items werden nicht abgespielt. Es werden keine fremden Portale ausgelesen und keine Bezahlschranken umgangen.</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
         </assets>
-        <news>1.0.0: Filmarchiv, Suche, Zufallsfilm und eigene Streams.</news>
+        <news>1.1.0: Qualitätsauswahl (Auflösung/Größe), optionaler Lizenzfilter, keine Wiedergabe gesperrter Items, schnellere Listen ohne HEAD-Abfragen.</news>
     </extension>
 </addon>
-<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.0.0" provider-name="Stream Kommando">
+<addon id="repository.streamkommando" name="Stream Kommando Repository" version="1.1.0" provider-name="Stream Kommando">
     <extension point="xbmc.addon.repository" name="Stream Kommando Repository">
-        <info>https://raw.githubusercontent.com/xsensenmannx/kodi-repo-streamkommando/main/addons.xml</info>
-        <checksum>https://raw.githubusercontent.com/xsensenmannx/kodi-repo-streamkommando/main/addons.xml.md5</checksum>
-        <datadir zip="true">https://raw.githubusercontent.com/xsensenmannx/kodi-repo-streamkommando/main/zips</datadir>
+        <info>https://xsensenmannx.github.io/kodi-repo-streamkommando/addons.xml</info>
+        <checksum>https://xsensenmannx.github.io/kodi-repo-streamkommando/addons.xml.md5</checksum>
+        <datadir zip="true">https://xsensenmannx.github.io/kodi-repo-streamkommando/zips</datadir>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="de_DE">Kodi-Repository für Stream Kommando</summary>
